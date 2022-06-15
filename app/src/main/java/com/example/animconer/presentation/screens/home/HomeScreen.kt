@@ -6,6 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -23,8 +27,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.animconer.R
 import com.example.animconer.presentation.ui.theme.PrimaryDark
+import com.example.animconer.presentation.ui.theme.SecondaryDark
 import com.example.animconer.presentation.ui.theme.SkyBlue
 import com.example.animconer.presentation.ui.theme.White
+import com.google.accompanist.flowlayout.FlowColumn
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.SizeMode
 import com.ramcosta.composedestinations.annotation.Destination
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -32,6 +40,101 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun HomeScreen(
 ) {
+
+    val genres = listOf(
+        "Magic",
+        "Romance",
+        "Comedy",
+        "Magic",
+        "Romance",
+        "Comedy"
+    )
+
+    //Airing
+    val airing = listOf(
+        Airing(
+            name = "Spookiz The Movie",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg"
+        ),
+        Airing(
+            name = "Spookiz The Movie",
+            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg"
+        ),
+        Airing(
+            name = "Spookiz The Movie",
+            imageUrl = "https://wallpaperaccess.com/full/749909.jpg"
+        ),
+        Airing(
+            name = "Spookiz The Movie",
+            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg"
+        ),
+        Airing(
+            name = "Spookiz The Movie",
+            imageUrl = "https://wallpaperaccess.com/full/749909.jpg"
+        ),
+        Airing(
+            name = "Spookiz The Movie",
+            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg"
+        ),
+
+
+    )
+
+
+    val anim = listOf(
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
+            type = "TV Series"
+        ),
+        Anims(
+            name = "The Greatest Demon Lord",
+            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
+            type = "TV Series"
+        ),
+    )
+
+
     Scaffold(
         backgroundColor = PrimaryDark,
         topBar = {
@@ -39,22 +142,73 @@ fun HomeScreen(
         }
     )
     {
-        LazyColumn {
+
+        LazyColumn{
             item {
                 Explore()
             }
-            item {
+           item{
                 Genres()
             }
             item {
+                LazyRow {
+                    items(genres) { genres ->
+                        Card(
+                            shape = RoundedCornerShape(8.dp),
+                            backgroundColor = SkyBlue,
+                            contentColor = White,
+                            elevation = 8.dp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                text = genres,
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Justify
+                            )
+                        }
+                    }
+                }
+            }
+             item {
                 Trending()
             }
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
 
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(anim) { anim ->
+                        Spacer(modifier = Modifier.height(8.dp))
+                        AnimItem(imageUrl = anim.imageUrl, name =anim.name , type = anim.type )
+                    }
+                }
+            }
+            item{
+                AiringNow()
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(airing) { airing ->
+                        Spacer(modifier = Modifier.height(8.dp))
+                        AnimItem(imageUrl = airing.imageUrl, name =airing.name , type = "Airing" )
+                    }
+                }
+
+            }
         }
-
     }
-
-
 }
 
 @Composable
@@ -80,7 +234,7 @@ fun Explore() {
     ) {
         Text(
             text = "Explore",
-            fontSize = 30.sp,
+            fontSize = 24.sp,
             color = White,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 8.dp)
@@ -106,7 +260,7 @@ fun Explore() {
                 unfocusedBorderColor = White
             ),
             modifier = Modifier
-                .padding(start = 10.dp, end = 6.dp)
+                .padding(start = 8.dp, end = 6.dp)
                 .fillMaxWidth()
         )
 
@@ -118,20 +272,21 @@ fun Genres() {
     Column(
         Modifier.fillMaxWidth()
     ) {
-        Row(Modifier.fillMaxWidth(),
+        Row(
+            Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Genres",
-                fontSize = 24.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = White,
                 modifier = Modifier.padding(start = 8.dp, top = 6.dp)
             )
             Text(
                 text = "See All",
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = SkyBlue,
                 modifier = Modifier
@@ -142,37 +297,6 @@ fun Genres() {
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        val genres = listOf(
-            "Magic",
-            "Romance",
-            "Comedy",
-            "Magic",
-            "Romance",
-            "Comedy"
-        )
-        LazyRow{
-            items(genres){ genres->
-                Card(
-                    shape = RoundedCornerShape(8.dp),
-                    backgroundColor = SkyBlue,
-                    contentColor = White,
-                    elevation = 8.dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-
-                ){
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        text = genres,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Justify
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -188,14 +312,14 @@ fun Trending() {
         ) {
             Text(
                 text = "Trending Now",
-                fontSize = 24.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = White,
                 modifier = Modifier.padding(start = 8.dp, top = 6.dp)
             )
             Text(
                 text = "See All",
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = SkyBlue,
                 modifier = Modifier
@@ -205,88 +329,168 @@ fun Trending() {
                     }
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        val anim = listOf(
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-            Anims(name = "The Greatest Demon Lord", imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg", type = "TV Series" ),
-        )
-       LazyRow(
-           horizontalArrangement = Arrangement.spacedBy(16.dp)
-       ){
-           items(anim){ anim->
-               Card(
-                   shape = RoundedCornerShape(8.dp),
-                   elevation = 8.dp,
-                   modifier = Modifier
-                       .height(200.dp)
-                       .width(150.dp)
-                       .padding(start = 8.dp)
-               ) {
-                   Box(
-                       Modifier.fillMaxWidth()
-                   ) {
-                       Image(
-                           painter = rememberImagePainter(
-                               data = anim.imageUrl,
-                               builder = {
-                                   placeholder(R.drawable.logo)
-                                   crossfade(true)
-                               }
-                           ),
-                           modifier = Modifier.fillMaxSize(),
-                           contentScale = ContentScale.Crop,
-                           contentDescription = null
-                       )
-                       Column(
-                           Modifier.fillMaxSize(),
-                           verticalArrangement = Arrangement.Bottom,
-                       ) {
-                           Text(
-                               text = anim.name,
-                               fontSize = 16.sp,
-                               color = White,
-                               fontWeight = FontWeight.SemiBold,
-                               modifier = Modifier.padding(start = 8.dp)
-                           )
-                           Spacer(modifier = Modifier.height(4.dp))
-                           Row(
-                               horizontalArrangement = Arrangement.Start,
-                               modifier = Modifier.fillMaxWidth()
-                                   .padding(start = 8.dp),
-                               verticalAlignment = Alignment.CenterVertically
-                           ) {
-                               Image(
-                                   painter = painterResource(id = R.drawable.ic_film),
-                                   contentDescription =null
-                               )
-                               Spacer(modifier = Modifier.width(10.dp))
-                               Text(
-                                   text = anim.type,
-                                   color = White,
-                                   fontSize = 14.sp,
-                                   fontWeight = FontWeight.SemiBold
-                               )
-                           }
-                       }
-                   }
-               }
-           }
-       }
-
     }
+}
+
+
+@Composable
+fun AiringNow() {
+        Row(
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = "Now Airing",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = White,
+                modifier = Modifier.padding(start = 8.dp, top = 6.dp)
+            )
+            Text(
+                text = "See All",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = SkyBlue,
+                modifier = Modifier
+                    .padding(end = 8.dp, top = 6.dp)
+                    .clickable {
+                        //Todo
+                    }
+            )
+        }
+}
+
+
+@Composable
+fun AnimItem(
+    imageUrl:String,
+    name:String,
+    type: String?
+) {
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        elevation = 8.dp,
+        modifier = Modifier
+            .height(200.dp)
+            .width(200.dp)
+            .padding(start = 8.dp)
+    ) {
+        Box(
+            Modifier.fillMaxWidth()
+        ) {
+            Image(
+                painter = rememberImagePainter(
+                    data = imageUrl,
+                    builder = {
+                        placeholder(R.drawable.logo)
+                        crossfade(true)
+                    }
+                ),
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                contentDescription = null
+            )
+            Column(
+                Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                Text(
+                    text = name,
+                    fontSize = 16.sp,
+                    color = White,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_film),
+                        contentDescription = null
+                    )
+                    if (type!= null){
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = type,
+                            color = White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 data class Anims(
     val name: String,
-    val imageUrl : String,
+    val imageUrl: String,
     val type: String,
 )
 
+data class Airing(
+    val imageUrl: String,
+    val name: String
+)
+/*
+*  Card(
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier
+                                .height(120.dp)
+                                .fillMaxWidth(),
+                            backgroundColor = PrimaryDark
+                        ) {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Card(
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Box(modifier = Modifier.fillMaxSize()) {
+                                        Image(
+                                            painter = rememberImagePainter(
+                                                data = airing.imageUrl,
+                                                builder = {
+                                                    placeholder(R.drawable.logo)
+                                                    crossfade(true)
+                                                }
+                                            ),
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentScale = ContentScale.Crop,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column(
+                                    //Modifier.fillMaxHeight(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.Start
+                                ) {
+                                    Text(
+                                        text = airing.name,
+                                        fontSize = 18.sp,
+                                        color = White,
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "Airing",
+                                        fontSize = 14.sp,
+                                        color = SkyBlue,
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
+                                }
+                            }
+                        }*/

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,7 +56,13 @@ class MainActivity : ComponentActivity() {
                             BottomNavigation(
                                 backgroundColor = SecondaryDark,
                                 contentColor = SkyBlue,
-                                modifier = Modifier.padding(12.dp).shadow(shape = RoundedCornerShape(15.dp), clip = true, elevation = 16.dp),
+                                modifier = Modifier
+                                    .padding(12.dp)
+                                    .shadow(
+                                        shape = RoundedCornerShape(15.dp),
+                                        clip = true,
+                                        elevation = 16.dp
+                                    ),
                             ) {
                                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                                 val currentDestination = navBackStackEntry?.destination
@@ -90,12 +97,14 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                    ) {
-                        DestinationsNavHost(
-                            navGraph = NavGraphs.root,
-                            navController = navController,
-                            engine = navHostEngine
-                        )
+                    ) {paddingValues ->
+                       Box(modifier = Modifier.padding(paddingValues)) {
+                           DestinationsNavHost(
+                               navGraph = NavGraphs.root,
+                               navController = navController,
+                               engine = navHostEngine
+                           )
+                       }
                     }
                 }
             }
