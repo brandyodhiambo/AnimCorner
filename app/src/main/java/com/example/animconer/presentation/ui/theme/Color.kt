@@ -16,6 +16,7 @@ val DarkGray = Color(0xFF9d9d9f)
 val White = Color(0xFFFFFFFF)
 val SecondaryDark = Color(0xFF212F3B)
 val PrimaryDark = Color(0xFF15232E)
+val LightGray = Color(0xFFD3D3D3)
 
 
 

@@ -135,6 +135,9 @@ dependencies {
     // Swipe to refresh
     implementation "com.google.accompanist:accompanist-swiperefresh:0.24.3-alpha"
 
+    // Exo Player Library
+    implementation "com.google.android.exoplayer:exoplayer:2.16.1"
+
 
     // Livedata
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
