@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -25,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,15 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Destination
 @Composable
 fun DetailScreen() {
+
+    val details =  Details(
+        animationName = "Avengers from the west",
+        imageUrl = "https://tvovermind.com/wp-content/uploads/2018/06/47.jpg",
+        videoUrl = "https://www.youtube.com/watch?v=sGUVKc07xL8",
+        producer = "Wyner MacDonald",
+        type = "Movie",
+        description = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy."
+    )
     Scaffold(
         backgroundColor = PrimaryDark
     ) {
@@ -55,13 +66,15 @@ fun DetailScreen() {
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                ImageBanner()
+                ImageBanner(details.imageUrl,details.type)
+
             }
             item {
-                AnimationDescription()
+                AnimationDescription(details.animationName,details.producer,details.description)
+
             }
             item {
-                Trailer()
+                Trailer(details.videoUrl)
             }
 
         }
@@ -70,17 +83,17 @@ fun DetailScreen() {
 
 @Composable
 fun ImageBanner(
-    //imageUrl:String
-    //type:String
+    imageUrl:String,
+    type:String
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.6f)
+            .height(400.dp)
     ) {
         Image(
             painter = rememberImagePainter(
-                data = "animItem.imageUrl",
+                data = imageUrl,
                 builder = {
                     placeholder(R.drawable.logo)
                     crossfade(true)
@@ -91,7 +104,6 @@ fun ImageBanner(
             contentDescription = "Animation"
         )
         BackButton()
-        AnimationType()
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -104,6 +116,7 @@ fun ImageBanner(
                     )
                 )
         )
+        AnimationType(type)
 
     }
 
@@ -113,9 +126,11 @@ fun ImageBanner(
 @Composable
 fun BackButton() {
     Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Start,
-        modifier = Modifier.fillMaxWidth()
+        horizontalArrangement = Arrangement.Start
     ) {
         IconButton(onClick = { /*TODO*/ }) {
             Icon(
@@ -129,58 +144,74 @@ fun BackButton() {
 
 @Composable
 fun AnimationType(
-    //type:String
+    type:String
 ) {
     Row(
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.Bottom
     ) {
-        Card(
-            shape = RoundedCornerShape(20.dp),
-            backgroundColor = SkyBlue,
-            elevation = 4.dp,
-            contentColor = White,
-            modifier = Modifier.fillMaxSize()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Tv Show", fontSize = 12.sp)
-        }
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Default.FavoriteBorder,
-                contentDescription = null,
-                tint = SkyBlue
-            )
+            Card(
+                shape = RoundedCornerShape(20.dp),
+                backgroundColor = SkyBlue,
+                elevation = 4.dp,
+                contentColor = White,
+            ) {
+                Text(
+                    text = type,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(6.dp)
+                )
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Default.FavoriteBorder,
+                    contentDescription = null,
+                    tint = SkyBlue,
+                    modifier = Modifier.size(40.dp)
+                )
 
+            }
         }
+
 
     }
 }
 
 @Composable
 fun AnimationDescription(
-    /*animationName:String,
+    animationName:String,
     producer:String,
-    description:String*/
+    description:String
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(start = 8.dp, end = 8.dp)
     ) {
         Text(
-            text = "movie Name",
+            text = animationName,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = SkyBlue
+            color = SkyBlue,
+            textAlign = TextAlign.Start
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = producer,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = White,
+            textAlign = TextAlign.Start
+
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Producer Name",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = White
-        )
-        Spacer(modifier = Modifier.height(16.dp))
 
         var expanded by remember { mutableStateOf(false) }
         val textLayoutResultState = remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -193,7 +224,7 @@ fun AnimationDescription(
         val seeMoreOffset = seeMoreOffsetState.value
         Box {
             Text(
-                text = "Description",
+                text = description,
                 fontSize = 13.sp,
                 color = LightGray,
                 modifier = Modifier.clickable(
@@ -203,7 +234,7 @@ fun AnimationDescription(
                 {
                     expanded = false
                 },
-                maxLines = if (expanded) Int.MAX_VALUE else 3,
+                maxLines = if (expanded) Int.MAX_VALUE else 5,
                 overflow = TextOverflow.Ellipsis,
                 onTextLayout = { textLayoutResultState.value = it },
             )
@@ -211,7 +242,7 @@ fun AnimationDescription(
                 val density = LocalDensity.current
                 Text(
                     color = SkyBlue,
-                    text = "... See more",
+                    text = "Read More",
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
                     onTextLayout = { seeMoreSizeState.value = it.size },
@@ -242,7 +273,7 @@ fun AnimationDescription(
 
 @Composable
 fun Trailer(
-    //videoLink:String
+    videoLink:String
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -251,8 +282,9 @@ fun Trailer(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Trailer",
@@ -269,12 +301,13 @@ fun Trailer(
         }
         Card(
             modifier = Modifier
-                .height(500.dp)
-                .fillMaxWidth()
+                .height(200.dp)
+                .width(600.dp)
+                .padding(start = 8.dp, end = 8.dp)
         ) {
 
             val mContext = LocalContext.current
-            val mVideoUrl = "video Link"
+            val mVideoUrl = videoLink
 
             // Declaring ExoPlayer
             val mExoPlayer = remember(mContext) {
@@ -300,7 +333,14 @@ fun Trailer(
         }
 
     }
-
 }
+data class Details(
+    val animationName:String,
+    val imageUrl:String,
+    val videoUrl:String,
+    val producer:String,
+    val type:String,
+    val description:String
+)
 
 
