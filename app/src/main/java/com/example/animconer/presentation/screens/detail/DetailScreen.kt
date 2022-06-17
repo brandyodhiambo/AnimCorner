@@ -8,7 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.rememberImagePainter
 import com.example.animconer.R
+import com.example.animconer.presentation.screens.destinations.CharacterScreenDestination
 import com.example.animconer.presentation.ui.theme.LightGray
 import com.example.animconer.presentation.ui.theme.PrimaryDark
 import com.example.animconer.presentation.ui.theme.SkyBlue
@@ -44,13 +46,16 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination
 @Composable
-fun DetailScreen() {
+fun DetailScreen(
+    navigator: DestinationsNavigator
+) {
 
-    val details =  Details(
+    val details = Details(
         animationName = "Avengers from the west",
         imageUrl = "https://tvovermind.com/wp-content/uploads/2018/06/47.jpg",
         videoUrl = "https://www.youtube.com/watch?v=sGUVKc07xL8",
@@ -66,15 +71,26 @@ fun DetailScreen() {
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                ImageBanner(details.imageUrl,details.type)
+                ImageBanner(
+                    details.imageUrl,
+                    details.type,
+                    navigator
+                )
 
             }
             item {
-                AnimationDescription(details.animationName,details.producer,details.description)
+                AnimationDescription(
+                    details.animationName,
+                    details.producer,
+                    details.description
+                )
 
             }
             item {
-                Trailer(details.videoUrl)
+                Trailer(
+                    details.videoUrl,
+                    navigator
+                )
             }
 
         }
@@ -83,8 +99,9 @@ fun DetailScreen() {
 
 @Composable
 fun ImageBanner(
-    imageUrl:String,
-    type:String
+    imageUrl: String,
+    type: String,
+    navigator: DestinationsNavigator
 ) {
     Box(
         modifier = Modifier
@@ -103,7 +120,7 @@ fun ImageBanner(
             contentScale = ContentScale.Crop,
             contentDescription = "Animation"
         )
-        BackButton()
+        BackButton(navigator)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -124,27 +141,45 @@ fun ImageBanner(
 
 
 @Composable
-fun BackButton() {
+fun BackButton(navigator: DestinationsNavigator) {
     Row(
         modifier = Modifier
-            .fillMaxSize()
             .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start
     ) {
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = null,
-                tint = SkyBlue
+        Button(
+            onClick = {
+                navigator.popBackStack()
+            },
+            shape = CircleShape,
+            contentPadding = PaddingValues(),
+            elevation = ButtonDefaults.elevation(),
+            modifier = Modifier
+                .width(40.dp)
+                .height(40.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.White.copy(alpha = 0.3f),
+                contentColor = Color.Gray
             )
+        ) {
+            IconButton(onClick = {
+            }) {
+                Icon(
+                    modifier = Modifier.size(100.dp),
+                    painter = painterResource(id = R.drawable.ic_chevron_left),
+                    tint = LightGray,
+                    contentDescription = null
+                )
+            }
         }
+
     }
 }
 
 @Composable
 fun AnimationType(
-    type:String
+    type: String
 ) {
     Row(
         modifier = Modifier
@@ -187,15 +222,19 @@ fun AnimationType(
 
 @Composable
 fun AnimationDescription(
-    animationName:String,
-    producer:String,
-    description:String
+    animationName: String,
+    producer: String,
+    description: String
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(start = 8.dp, end = 8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 16.dp, end = 16.dp)
     ) {
         Text(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = animationName,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
@@ -204,6 +243,8 @@ fun AnimationDescription(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = producer,
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
@@ -273,7 +314,8 @@ fun AnimationDescription(
 
 @Composable
 fun Trailer(
-    videoLink:String
+    videoLink: String,
+    navigator: DestinationsNavigator
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -282,22 +324,37 @@ fun Trailer(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
         ) {
+
+
             Text(
                 text = "Trailer",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = LightGray
             )
-            Text(
-                text = "Characters",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = LightGray
-            )
+            Row(
+                modifier = Modifier.clickable {
+                    navigator.popBackStack()
+                    navigator.navigate(CharacterScreenDestination)
+                },
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                Text(
+                    text = "Characters",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = LightGray
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_chevron_right),
+                    tint = White,
+                    contentDescription = null
+                )
+            }
+
         }
         Card(
             modifier = Modifier
@@ -316,11 +373,11 @@ fun Trailer(
                         mContext,
                         Util.getUserAgent(mContext, mContext.packageName)
                     )
-                    val source =
+                   /* val source =
                         ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
-                            Uri.parse(mVideoUrl)
-                        )
-                    prepare(source)
+                            //Uri.parse(mVideoUrl)
+                        )*/
+                    prepare(/*source*/)
                 }
             }
 
@@ -334,13 +391,14 @@ fun Trailer(
 
     }
 }
+
 data class Details(
-    val animationName:String,
-    val imageUrl:String,
-    val videoUrl:String,
-    val producer:String,
-    val type:String,
-    val description:String
+    val animationName: String,
+    val imageUrl: String,
+    val videoUrl: String,
+    val producer: String,
+    val type: String,
+    val description: String
 )
 
 

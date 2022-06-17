@@ -385,6 +385,7 @@ fun AnimItem(
             .selectable(
                 selected = selectedIndex.equals(imageUrl),
                 onClick = {
+                    navigator.popBackStack()
                     navigator.navigate(DetailScreenDestination)
                 }
             )
