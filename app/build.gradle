@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.animconer"
-        minSdk 21
+        minSdk 23
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -135,7 +135,13 @@ dependencies {
     // Swipe to refresh
     implementation "com.google.accompanist:accompanist-swiperefresh:0.24.3-alpha"
 
+    // Exo Player Library
+    implementation "com.google.android.exoplayer:exoplayer:2.17.1"
+
 
     // Livedata
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    //staggered grid
+   implementation 'com.github.nesyou01:LazyStaggeredGrid:1.2.0'
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.animconer.R
+import com.example.animconer.presentation.screens.destinations.DetailScreenDestination
 import com.example.animconer.presentation.ui.theme.PrimaryDark
 import com.example.animconer.presentation.ui.theme.SecondaryDark
 import com.example.animconer.presentation.ui.theme.SkyBlue
@@ -34,11 +36,13 @@ import com.google.accompanist.flowlayout.FlowColumn
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination(start = true)
 @Composable
 fun HomeScreen(
+    navigator: DestinationsNavigator
 ) {
 
     val genres = listOf(
@@ -78,7 +82,7 @@ fun HomeScreen(
         ),
 
 
-    )
+        )
 
 
     val anim = listOf(
@@ -143,11 +147,11 @@ fun HomeScreen(
     )
     {
 
-        LazyColumn{
+        LazyColumn {
             item {
                 Explore()
             }
-           item{
+            item {
                 Genres()
             }
             item {
@@ -175,7 +179,7 @@ fun HomeScreen(
                     }
                 }
             }
-             item {
+            item {
                 Trending()
             }
             item {
@@ -186,11 +190,11 @@ fun HomeScreen(
                 ) {
                     items(anim) { anim ->
                         Spacer(modifier = Modifier.height(8.dp))
-                        AnimItem(imageUrl = anim.imageUrl, name =anim.name , type = anim.type )
+                        AnimItem(imageUrl = anim.imageUrl, name = anim.name, type = anim.type,navigator)
                     }
                 }
             }
-            item{
+            item {
                 AiringNow()
             }
 
@@ -202,7 +206,7 @@ fun HomeScreen(
                 ) {
                     items(airing) { airing ->
                         Spacer(modifier = Modifier.height(8.dp))
-                        AnimItem(imageUrl = airing.imageUrl, name =airing.name , type = "Airing" )
+                        AnimItem(imageUrl = airing.imageUrl, name = airing.name, type = "Airing",navigator)
                     }
                 }
 
@@ -335,39 +339,42 @@ fun Trending() {
 
 @Composable
 fun AiringNow() {
-        Row(
-            Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = "Now Airing",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = White,
-                modifier = Modifier.padding(start = 8.dp, top = 6.dp)
-            )
-            Text(
-                text = "See All",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = SkyBlue,
-                modifier = Modifier
-                    .padding(end = 8.dp, top = 6.dp)
-                    .clickable {
-                        //Todo
-                    }
-            )
-        }
+    Row(
+        Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = "Now Airing",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = White,
+            modifier = Modifier.padding(start = 8.dp, top = 6.dp)
+        )
+        Text(
+            text = "See All",
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            color = SkyBlue,
+            modifier = Modifier
+                .padding(end = 8.dp, top = 6.dp)
+                .clickable {
+                    //Todo
+                }
+        )
+    }
 }
 
 
 @Composable
 fun AnimItem(
-    imageUrl:String,
-    name:String,
-    type: String?
+    imageUrl: String,
+    name: String,
+    type: String?,
+    navigator: DestinationsNavigator
 ) {
+    var selectedIndex by remember { mutableStateOf(-1) }
+
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp,
@@ -375,6 +382,13 @@ fun AnimItem(
             .height(200.dp)
             .width(200.dp)
             .padding(start = 8.dp)
+            .selectable(
+                selected = selectedIndex.equals(imageUrl),
+                onClick = {
+                    navigator.popBackStack()
+                    navigator.navigate(DetailScreenDestination)
+                }
+            )
     ) {
         Box(
             Modifier.fillMaxWidth()
@@ -414,7 +428,7 @@ fun AnimItem(
                         painter = painterResource(id = R.drawable.ic_film),
                         contentDescription = null
                     )
-                    if (type!= null){
+                    if (type != null) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = type,
