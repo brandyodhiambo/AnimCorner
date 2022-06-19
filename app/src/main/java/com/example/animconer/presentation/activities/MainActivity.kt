@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.animconer.domain.model.BottomNavItem
 import com.example.animconer.presentation.screens.NavGraphs
+import com.example.animconer.presentation.screens.destinations.AccountScreenDestination
+import com.example.animconer.presentation.screens.destinations.FavoritesScreenDestination
+import com.example.animconer.presentation.screens.destinations.HomeScreenDestination
 import com.example.animconer.presentation.ui.theme.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -35,10 +38,11 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = PrimaryDark
+                    color = PrimaryDark,
+
                 ) {
 
-
+                    var showBottomBar: Boolean = true
                     val navController = rememberAnimatedNavController()
                     val navHostEngine = rememberNavHostEngine()
 
@@ -50,52 +54,59 @@ class MainActivity : ComponentActivity() {
                         BottomNavItem.Favorites,
                         BottomNavItem.Account
                     )
+                    showBottomBar = route in listOf(
+                        HomeScreenDestination.route,
+                        FavoritesScreenDestination.route,
+                        AccountScreenDestination.route
+                    )
                     Scaffold(
                         backgroundColor = PrimaryDark,
                         bottomBar = {
-                            BottomNavigation(
-                                backgroundColor = SecondaryDark,
-                                contentColor = SkyBlue,
-                                modifier = Modifier
-                                    .padding(12.dp)
-                                    .shadow(
-                                        shape = RoundedCornerShape(15.dp),
-                                        clip = true,
-                                        elevation = 16.dp
-                                    ),
-                            ) {
-                                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                                val currentDestination = navBackStackEntry?.destination
-                                bottomItems.forEach { item ->
-                                    BottomNavigationItem(
-                                        icon = {
-                                            Icon(
-                                                painter = painterResource(id = item.icon),
-                                                contentDescription = null
-                                            )
-                                        },
-                                        label = {
-                                            Text(text = item.title)
-                                        },
-                                        alwaysShowLabel = false,
-                                        selectedContentColor = SkyBlue,
-                                        unselectedContentColor = White,
-                                        selected = currentDestination?.route?.contains(item.destination.route) == true,
+                           if(showBottomBar){
+                               BottomNavigation(
+                                   backgroundColor = SecondaryDark,
+                                   contentColor = SkyBlue,
+                                   modifier = Modifier
+                                       .padding(12.dp)
+                                       .shadow(
+                                           shape = RoundedCornerShape(15.dp),
+                                           clip = true,
+                                           elevation = 16.dp
+                                       ),
+                               ) {
+                                   val navBackStackEntry by navController.currentBackStackEntryAsState()
+                                   val currentDestination = navBackStackEntry?.destination
+                                   bottomItems.forEach { item ->
+                                       BottomNavigationItem(
+                                           icon = {
+                                               Icon(
+                                                   painter = painterResource(id = item.icon),
+                                                   contentDescription = null
+                                               )
+                                           },
+                                           label = {
+                                               Text(text = item.title)
+                                           },
+                                           alwaysShowLabel = true,
+                                           selectedContentColor = SkyBlue,
+                                           unselectedContentColor = White,
+                                           selected = currentDestination?.route?.contains(item.destination.route) == true,
 
-                                        onClick = {
-                                            navController.navigate(item.destination.route) {
-                                                navController.graph.startDestinationRoute?.let { screenRoute ->
-                                                    popUpTo(screenRoute) {
-                                                        saveState = true
-                                                    }
-                                                }
-                                                launchSingleTop = true
-                                                restoreState = true
-                                            }
-                                        }
-                                    )
-                                }
-                            }
+                                           onClick = {
+                                               navController.navigate(item.destination.route) {
+                                                   navController.graph.startDestinationRoute?.let { screenRoute ->
+                                                       popUpTo(screenRoute) {
+                                                           saveState = true
+                                                       }
+                                                   }
+                                                   launchSingleTop = true
+                                                   restoreState = true
+                                               }
+                                           }
+                                       )
+                                   }
+                               }
+                           }
                         }
                     ) {paddingValues ->
                        Box(modifier = Modifier.padding(paddingValues)) {

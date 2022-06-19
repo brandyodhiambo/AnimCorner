@@ -1,12 +1,14 @@
 package com.example.animconer.presentation.screens.characters
 
 import android.annotation.SuppressLint
+import android.widget.Toolbar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,11 +25,14 @@ import com.example.animconer.presentation.ui.theme.White
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination
 @Composable
-fun CharacterScreen() {
+fun CharacterScreen(
+    navigator: DestinationsNavigator
+) {
     val character = listOf(
         CharacterModel(
             name = "Ariana Grande",
@@ -68,7 +73,10 @@ fun CharacterScreen() {
 
         )
     Scaffold(
-        backgroundColor = PrimaryDark
+        backgroundColor = PrimaryDark,
+        topBar = {
+            CastAppBar(navigator)
+        }
     ) {
 
        Column {
@@ -79,7 +87,8 @@ fun CharacterScreen() {
                    Character(
                        imageUrl = character.imageUrl,
                        name = character.name,
-                       modifier = Modifier.height(random.dp)
+                       modifier = Modifier
+                           .height(random.dp)
                            .width(200.dp)
                    )
                }
@@ -89,6 +98,34 @@ fun CharacterScreen() {
        }
     }
 
+}
+
+@Composable
+fun CastAppBar(navigator: DestinationsNavigator) {
+   TopAppBar(
+       title = {
+           Text(
+               text = "Cast",
+               fontSize = 24.sp,
+               color = White,
+               fontWeight = FontWeight.SemiBold
+           )
+       },
+       navigationIcon = {
+           IconButton(onClick = {
+               navigator.popBackStack()
+               navigator.navigateUp()
+           }) {
+               Icon(
+                   imageVector = Icons.Default.ArrowBack,
+                   tint = Color.LightGray,
+                   contentDescription = null
+               )
+
+           }
+       },
+       backgroundColor = PrimaryDark
+   )
 
 }
 
@@ -99,9 +136,7 @@ fun Character(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier.clickable {
-
-        }
+        modifier.clickable {  }
    ) {
         Image(
             painter = rememberImagePainter(
