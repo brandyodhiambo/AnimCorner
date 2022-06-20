@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.animconer.R
+import com.example.animconer.presentation.screens.destinations.AboutScreenDestination
 import com.example.animconer.presentation.screens.destinations.ContactScreenDestination
 import com.example.animconer.presentation.ui.theme.LightGray
 import com.example.animconer.presentation.ui.theme.PrimaryDark
@@ -67,10 +68,6 @@ fun AccountScreen(
                     R.drawable.ic_share
                 ),
                 AccountItems(
-                    "Help",
-                    R.drawable.ic_help
-                ),
-                AccountItems(
                     "Contact",
                     R.drawable.ic_comment
                 )
@@ -81,10 +78,16 @@ fun AccountScreen(
                     onClick = {
                         when (item.title) {
                             "About" -> {
-                                Toast.makeText(context, "About", Toast.LENGTH_SHORT).show()
+                                navigator.popBackStack()
+                                navigator.navigate(AboutScreenDestination)
                             }
                             "Rate us" -> {
-                                //Todo add playstore code
+                               /*
+                               *   val rateIntent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("market://details?id=" + context.packageName)
+                                )
+                                startActivity(context, rateIntent, null)*/
                                 Toast.makeText(context, "Rate Us", Toast.LENGTH_SHORT).show()
                             }
                             "Share" -> {
@@ -97,10 +100,8 @@ fun AccountScreen(
                                 sendIntent.type = "text/plain"
                                 context.startActivity(sendIntent)
                             }
-                            "Help" -> {
-                                Toast.makeText(context, "Help", Toast.LENGTH_SHORT).show()
-                            }
                             "Contact" -> {
+                                navigator.popBackStack()
                                 navigator.navigate(ContactScreenDestination)
                             }
                         }

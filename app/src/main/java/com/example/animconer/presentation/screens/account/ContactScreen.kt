@@ -1,5 +1,7 @@
 package com.example.animconer.presentation.screens.account
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.animconer.R
 import com.example.animconer.presentation.ui.theme.PrimaryDark
 import com.example.animconer.presentation.ui.theme.SecondaryDark
@@ -70,16 +73,28 @@ fun ContactScreen(
                 ContactDetails(items = items, onClick = {
                     when(items.title){
                         "GitHub"->{
-                            Toast.makeText(context, "GitHub", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data =
+                                Uri.parse("https://github.com/brandy-kay")
+                            startActivity(context, intent, null)
                         }
                         "LinkedIn"->{
-
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data =
+                                Uri.parse("https://www.linkedin.com/in/brandy-odhiambo-989615202/")
+                            startActivity(context, intent, null)
                         }
                         "Twitter"->{
-
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data =
+                                Uri.parse("https://twitter.com/Arianabrandy5")
+                            startActivity(context, intent, null)
                         }
                         "Facebook"->{
-
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data =
+                                Uri.parse("https://www.facebook.com/ariana.brandy.79/")
+                            startActivity(context, intent, null)
                         }
                     }
                 })
@@ -96,7 +111,7 @@ fun ContactAppBar(navigator: DestinationsNavigator) {
         title = {
             Text(
                 text = "Contacts",
-                fontSize = 24.sp,
+                fontSize = 18.sp,
                 color = White,
                 fontWeight = FontWeight.SemiBold
             )
@@ -114,7 +129,8 @@ fun ContactAppBar(navigator: DestinationsNavigator) {
 
             }
         },
-        backgroundColor = PrimaryDark
+        backgroundColor = PrimaryDark,
+        elevation = 4.dp
     )
 
 }
