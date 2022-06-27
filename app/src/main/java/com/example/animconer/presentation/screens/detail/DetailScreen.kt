@@ -2,6 +2,7 @@ package com.example.animconer.presentation.screens.detail
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,6 +56,8 @@ fun DetailScreen(
     navigator: DestinationsNavigator
 ) {
 
+    val context = LocalContext.current
+
     val details = Details(
         animationName = "Avengers from the west",
         imageUrl = "https://tvovermind.com/wp-content/uploads/2018/06/47.jpg",
@@ -63,9 +66,7 @@ fun DetailScreen(
         type = "Movie",
         description = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy."
     )
-    Scaffold(
-        backgroundColor = PrimaryDark
-    ) {
+
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
@@ -74,7 +75,10 @@ fun DetailScreen(
                 ImageBanner(
                     details.imageUrl,
                     details.type,
-                    navigator
+                    onClick = {
+                        navigator.popBackStack()
+                        Toast.makeText(context, "knklnkl", Toast.LENGTH_SHORT).show()
+                    }
                 )
 
             }
@@ -94,14 +98,14 @@ fun DetailScreen(
             }
 
         }
-    }
+
 }
 
 @Composable
 fun ImageBanner(
     imageUrl: String,
     type: String,
-    navigator: DestinationsNavigator
+    onClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -120,7 +124,7 @@ fun ImageBanner(
             contentScale = ContentScale.Crop,
             contentDescription = "Animation"
         )
-        BackButton(navigator)
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -133,6 +137,7 @@ fun ImageBanner(
                     )
                 )
         )
+        BackButton(onClick)
         AnimationType(type)
 
     }
@@ -141,7 +146,8 @@ fun ImageBanner(
 
 
 @Composable
-fun BackButton(navigator: DestinationsNavigator) {
+fun BackButton(
+    onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp),
@@ -150,7 +156,9 @@ fun BackButton(navigator: DestinationsNavigator) {
     ) {
         Button(
             onClick = {
-                navigator.popBackStack()
+                //navigator.navigateUp()
+                //navigator.popBackStack()
+                      onClick()
             },
             shape = CircleShape,
             contentPadding = PaddingValues(),
@@ -163,8 +171,7 @@ fun BackButton(navigator: DestinationsNavigator) {
                 contentColor = Color.Gray
             )
         ) {
-            IconButton(onClick = {
-            }) {
+            IconButton(onClick = {}) {
                 Icon(
                     modifier = Modifier.size(100.dp),
                     painter = painterResource(id = R.drawable.ic_chevron_left),
