@@ -1,4 +1,4 @@
-package com.example.animconer.presentation.ui.theme
+package com.example.animconer.views.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

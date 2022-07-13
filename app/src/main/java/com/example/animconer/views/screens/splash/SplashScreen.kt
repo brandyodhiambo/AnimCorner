@@ -1,4 +1,4 @@
-package com.example.animconer.presentation.screens.splash
+package com.example.animconer.views.screens.splash
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.animation.core.Animatable
@@ -15,8 +15,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
@@ -24,8 +24,8 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.animconer.R
-import com.example.animconer.presentation.screens.destinations.HomeScreenDestination
-import com.example.animconer.presentation.ui.theme.PrimaryDark
+import com.example.animconer.views.screens.destinations.HomeScreenDestination
+import com.example.animconer.views.ui.theme.PrimaryDark
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +38,9 @@ fun SplashScreen(
     navigator: DestinationsNavigator
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().background(PrimaryDark),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PrimaryDark),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -54,16 +56,8 @@ fun SplashScreen(
 
         LaunchedEffect(key1 = true) {
             withContext(Dispatchers.Main) {
-                scale.animateTo(
-                    targetValue = 1.5f,
-                    animationSpec = tween(
-                        durationMillis = 700,
-                        easing = {
-                            overshootInterpolator.getInterpolation(it)
-                        })
-                )
 
-                delay(3000)
+                delay(1000)
                 navigator.popBackStack()
                 navigator.navigate(HomeScreenDestination)
             }
@@ -71,8 +65,9 @@ fun SplashScreen(
 
         GifImage(modifier = Modifier.fillMaxSize())
     }
-    
+
 }
+
 @Composable
 fun GifImage(
     modifier: Modifier = Modifier,

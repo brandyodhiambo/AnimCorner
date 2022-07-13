@@ -1,10 +1,10 @@
-package com.example.animconer.domain.model
+package com.example.animconer.model
 
 import com.example.animconer.R
-import com.example.animconer.presentation.screens.destinations.AccountScreenDestination
-import com.example.animconer.presentation.screens.destinations.Destination
-import com.example.animconer.presentation.screens.destinations.FavoritesScreenDestination
-import com.example.animconer.presentation.screens.destinations.HomeScreenDestination
+import com.example.animconer.views.screens.destinations.AccountScreenDestination
+import com.example.animconer.views.screens.destinations.Destination
+import com.example.animconer.views.screens.destinations.FavoritesScreenDestination
+import com.example.animconer.views.screens.destinations.HomeScreenDestination
 
 sealed class BottomNavItem(val title:String,val icon :Int, var destination:Destination) {
     object Home :BottomNavItem(

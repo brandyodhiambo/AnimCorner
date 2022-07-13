@@ -1,8 +1,7 @@
-package com.example.animconer.presentation.screens.account
+package com.example.animconer.views.screens.account
 
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.example.animconer.R
-import com.example.animconer.presentation.ui.theme.PrimaryDark
-import com.example.animconer.presentation.ui.theme.SecondaryDark
-import com.example.animconer.presentation.ui.theme.SkyBlue
-import com.example.animconer.presentation.ui.theme.White
+import com.example.animconer.views.ui.theme.PrimaryDark
+import com.example.animconer.views.ui.theme.SecondaryDark
+import com.example.animconer.views.ui.theme.SkyBlue
+import com.example.animconer.views.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -118,7 +117,6 @@ fun ContactAppBar(navigator: DestinationsNavigator) {
         },
         navigationIcon = {
             IconButton(onClick = {
-                navigator.popBackStack()
                 navigator.navigateUp()
             }) {
                 Icon(

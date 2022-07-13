@@ -1,7 +1,6 @@
-package com.example.animconer.presentation.screens.detail
+package com.example.animconer.views.screens.detail
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,7 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,13 +34,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.rememberImagePainter
 import com.example.animconer.R
-import com.example.animconer.presentation.screens.destinations.CharacterScreenDestination
-import com.example.animconer.presentation.ui.theme.LightGray
-import com.example.animconer.presentation.ui.theme.PrimaryDark
-import com.example.animconer.presentation.ui.theme.SkyBlue
-import com.example.animconer.presentation.ui.theme.White
+import com.example.animconer.views.screens.destinations.CharacterScreenDestination
+import com.example.animconer.views.ui.theme.LightGray
+import com.example.animconer.views.ui.theme.PrimaryDark
+import com.example.animconer.views.ui.theme.SkyBlue
+import com.example.animconer.views.ui.theme.White
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
@@ -76,8 +73,7 @@ fun DetailScreen(
                     details.imageUrl,
                     details.type,
                     onClick = {
-                        navigator.popBackStack()
-                        Toast.makeText(context, "knklnkl", Toast.LENGTH_SHORT).show()
+                        navigator.navigateUp()
                     }
                 )
 
@@ -156,8 +152,6 @@ fun BackButton(
     ) {
         Button(
             onClick = {
-                //navigator.navigateUp()
-                //navigator.popBackStack()
                       onClick()
             },
             shape = CircleShape,
@@ -171,7 +165,9 @@ fun BackButton(
                 contentColor = Color.Gray
             )
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                onClick()
+            }) {
                 Icon(
                     modifier = Modifier.size(100.dp),
                     painter = painterResource(id = R.drawable.ic_chevron_left),

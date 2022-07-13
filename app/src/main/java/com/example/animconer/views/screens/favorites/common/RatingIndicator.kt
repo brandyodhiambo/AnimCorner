@@ -1,4 +1,4 @@
-package com.example.animconer.presentation.screens.favorites.common
+package com.example.animconer.views.screens.favorites.common
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.animconer.presentation.ui.theme.SkyBlue
+import com.example.animconer.views.ui.theme.SkyBlue
 
 @Composable
 fun RatingIndicator(

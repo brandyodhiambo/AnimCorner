@@ -1,7 +1,6 @@
-package com.example.animconer.presentation.screens.characters
+package com.example.animconer.views.screens.characters
 
 import android.annotation.SuppressLint
-import android.widget.Toolbar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.animconer.R
-import com.example.animconer.presentation.ui.theme.PrimaryDark
-import com.example.animconer.presentation.ui.theme.White
+import com.example.animconer.views.ui.theme.PrimaryDark
+import com.example.animconer.views.ui.theme.White
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells
 import com.ramcosta.composedestinations.annotation.Destination

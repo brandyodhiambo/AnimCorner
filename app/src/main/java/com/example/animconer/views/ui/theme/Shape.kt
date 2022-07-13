@@ -1,4 +1,4 @@
-package com.example.animconer.presentation.ui.theme
+package com.example.animconer.views.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

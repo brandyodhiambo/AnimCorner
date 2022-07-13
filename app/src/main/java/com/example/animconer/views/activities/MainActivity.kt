@@ -1,4 +1,4 @@
-package com.example.animconer.presentation.activities
+package com.example.animconer.views.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -16,12 +16,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.animconer.domain.model.BottomNavItem
-import com.example.animconer.presentation.screens.NavGraphs
-import com.example.animconer.presentation.screens.destinations.AccountScreenDestination
-import com.example.animconer.presentation.screens.destinations.FavoritesScreenDestination
-import com.example.animconer.presentation.screens.destinations.HomeScreenDestination
-import com.example.animconer.presentation.ui.theme.*
+import com.example.animconer.model.BottomNavItem
+import com.example.animconer.views.screens.NavGraphs
+import com.example.animconer.views.screens.destinations.AccountScreenDestination
+import com.example.animconer.views.screens.destinations.FavoritesScreenDestination
+import com.example.animconer.views.screens.destinations.HomeScreenDestination
+import com.example.animconer.views.ui.theme.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.rememberNavHostEngine

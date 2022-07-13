@@ -1,15 +1,12 @@
-package com.example.animconer.presentation.screens.home
+package com.example.animconer.views.screens.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +16,10 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,18 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.animconer.R
-import com.example.animconer.presentation.screens.destinations.DetailScreenDestination
-import com.example.animconer.presentation.ui.theme.PrimaryDark
-import com.example.animconer.presentation.ui.theme.SecondaryDark
-import com.example.animconer.presentation.ui.theme.SkyBlue
-import com.example.animconer.presentation.ui.theme.White
-import com.google.accompanist.flowlayout.FlowColumn
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.SizeMode
+import com.example.animconer.views.screens.destinations.DetailScreenDestination
+import com.example.animconer.views.ui.theme.PrimaryDark
+import com.example.animconer.views.ui.theme.SkyBlue
+import com.example.animconer.views.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination
 @Composable
 fun HomeScreen(
@@ -83,7 +79,6 @@ fun HomeScreen(
 
 
         )
-
 
     val anim = listOf(
         Anims(
@@ -138,97 +133,87 @@ fun HomeScreen(
         ),
     )
 
-
     Scaffold(
-        backgroundColor = PrimaryDark,
-        topBar = {
-            AppBar()
-        }
+        backgroundColor = PrimaryDark
     )
-    {
-
-        LazyColumn {
-            item {
-                Explore()
-            }
-            item {
-                Genres()
-            }
-            item {
-                LazyRow {
-                    items(genres) { genres ->
-                        Card(
-                            shape = RoundedCornerShape(8.dp),
-                            backgroundColor = SkyBlue,
-                            contentColor = White,
-                            elevation = 8.dp,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-
-                        ) {
-                            Text(
+    { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
+            LazyColumn(contentPadding = PaddingValues(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                item {
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        modifier = Modifier.size(100.dp).align(Alignment.Center),
+                        contentDescription = null
+                    )
+                }
+                item {
+                    Explore()
+                }
+                item {
+                    Genres()
+                }
+                item {
+                    LazyRow {
+                        items(genres) { genres ->
+                            Card(
+                                shape = RoundedCornerShape(8.dp),
+                                backgroundColor = SkyBlue,
+                                contentColor = White,
+                                elevation = 8.dp,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(16.dp),
-                                text = genres,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Justify
-                            )
+                                    .padding(8.dp)
+
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    text = genres,
+                                    fontSize = 16.sp,
+                                    textAlign = TextAlign.Justify
+                                )
+                            }
                         }
                     }
                 }
-            }
-            item {
-                Trending()
-            }
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+                item {
+                    Trending()
+                }
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(anim) { anim ->
-                        Spacer(modifier = Modifier.height(8.dp))
-                        AnimItem(imageUrl = anim.imageUrl, name = anim.name, type = anim.type,navigator)
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(anim) { anim ->
+                            Spacer(modifier = Modifier.height(8.dp))
+                            AnimItem(imageUrl = anim.imageUrl, name = anim.name, type = anim.type,navigator)
+                        }
                     }
                 }
-            }
-            item {
-                AiringNow()
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(airing) { airing ->
-                        Spacer(modifier = Modifier.height(8.dp))
-                        AnimItem(imageUrl = airing.imageUrl, name = airing.name, type = "Airing",navigator)
-                    }
+                item {
+                    AiringNow()
                 }
 
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(airing) { airing ->
+                            Spacer(modifier = Modifier.height(8.dp))
+                            AnimItem(imageUrl = airing.imageUrl, name = airing.name, type = "Airing",navigator)
+                        }
+                    }
+
+                }
             }
         }
     }
 }
 
-@Composable
-fun AppBar() {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            modifier = Modifier.size(100.dp),
-            contentDescription = null
-        )
-    }
-}
 
 @Composable
 fun Explore() {
@@ -268,6 +253,7 @@ fun Explore() {
                 .fillMaxWidth()
         )
 
+
     }
 }
 
@@ -287,17 +273,6 @@ fun Genres() {
                 fontWeight = FontWeight.SemiBold,
                 color = White,
                 modifier = Modifier.padding(start = 8.dp, top = 6.dp)
-            )
-            Text(
-                text = "See All",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = SkyBlue,
-                modifier = Modifier
-                    .padding(end = 8.dp, top = 6.dp)
-                    .clickable {
-                        //Todo
-                    }
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -321,21 +296,10 @@ fun Trending() {
                 color = White,
                 modifier = Modifier.padding(start = 8.dp, top = 6.dp)
             )
-            Text(
-                text = "See All",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = SkyBlue,
-                modifier = Modifier
-                    .padding(end = 8.dp, top = 6.dp)
-                    .clickable {
-                        //Todo
-                    }
-            )
         }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
-
 
 @Composable
 fun AiringNow() {
@@ -351,18 +315,9 @@ fun AiringNow() {
             color = White,
             modifier = Modifier.padding(start = 8.dp, top = 6.dp)
         )
-        Text(
-            text = "See All",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            color = SkyBlue,
-            modifier = Modifier
-                .padding(end = 8.dp, top = 6.dp)
-                .clickable {
-                    //Todo
-                }
-        )
+
     }
+    Spacer(modifier = Modifier.height(8.dp))
 }
 
 
@@ -371,27 +326,18 @@ fun AnimItem(
     imageUrl: String,
     name: String,
     type: String?,
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    modifier: Modifier = Modifier
 ) {
-    var selectedIndex by remember { mutableStateOf(-1) }
-
-    Card(
-        shape = RoundedCornerShape(8.dp),
-        elevation = 8.dp,
-        modifier = Modifier
-            .height(200.dp)
-            .width(200.dp)
-            .padding(start = 8.dp)
-            .selectable(
-                selected = selectedIndex.equals(imageUrl),
-                onClick = {
-                    navigator.popBackStack()
+        Box(
+            modifier = modifier
+                .padding(start = 4.dp)
+                .height(200.dp)
+                .width(180.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .clickable {
                     navigator.navigate(DetailScreenDestination)
                 }
-            )
-    ) {
-        Box(
-            Modifier.fillMaxWidth()
         ) {
             Image(
                 painter = rememberImagePainter(
@@ -401,9 +347,21 @@ fun AnimItem(
                         crossfade(true)
                     }
                 ),
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
                 contentDescription = null
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colorStops = arrayOf(
+                                Pair(0.3f, Color.Transparent),
+                                Pair(1.5f, PrimaryDark)
+                            )
+                        )
+                    )
             )
             Column(
                 Modifier.fillMaxSize(),
@@ -440,7 +398,6 @@ fun AnimItem(
                 }
             }
         }
-    }
 
 }
 
@@ -454,57 +411,3 @@ data class Airing(
     val imageUrl: String,
     val name: String
 )
-/*
-*  Card(
-                            shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier
-                                .height(120.dp)
-                                .fillMaxWidth(),
-                            backgroundColor = PrimaryDark
-                        ) {
-                            Row(
-                                Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Card(
-                                    shape = RoundedCornerShape(10.dp),
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Box(modifier = Modifier.fillMaxSize()) {
-                                        Image(
-                                            painter = rememberImagePainter(
-                                                data = airing.imageUrl,
-                                                builder = {
-                                                    placeholder(R.drawable.logo)
-                                                    crossfade(true)
-                                                }
-                                            ),
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentScale = ContentScale.Crop,
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Column(
-                                    //Modifier.fillMaxHeight(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.Start
-                                ) {
-                                    Text(
-                                        text = airing.name,
-                                        fontSize = 18.sp,
-                                        color = White,
-                                        fontWeight = FontWeight.SemiBold,
-                                        modifier = Modifier.padding(start = 8.dp)
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "Airing",
-                                        fontSize = 14.sp,
-                                        color = SkyBlue,
-                                        modifier = Modifier.padding(start = 8.dp)
-                                    )
-                                }
-                            }
-                        }*/

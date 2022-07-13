@@ -1,4 +1,4 @@
-package com.example.animconer.presentation.screens.account
+package com.example.animconer.views.screens.account
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,23 +10,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.animconer.R
-import com.example.animconer.presentation.screens.destinations.AboutScreenDestination
-import com.example.animconer.presentation.screens.destinations.ContactScreenDestination
-import com.example.animconer.presentation.ui.theme.LightGray
-import com.example.animconer.presentation.ui.theme.PrimaryDark
-import com.example.animconer.presentation.ui.theme.SecondaryDark
-import com.example.animconer.presentation.ui.theme.White
+import com.example.animconer.views.screens.destinations.AboutScreenDestination
+import com.example.animconer.views.screens.destinations.ContactScreenDestination
+import com.example.animconer.views.ui.theme.LightGray
+import com.example.animconer.views.ui.theme.SecondaryDark
+import com.example.animconer.views.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -78,7 +73,6 @@ fun AccountScreen(
                     onClick = {
                         when (item.title) {
                             "About" -> {
-                                navigator.popBackStack()
                                 navigator.navigate(AboutScreenDestination)
                             }
                             "Rate us" -> {
@@ -101,7 +95,6 @@ fun AccountScreen(
                                 context.startActivity(sendIntent)
                             }
                             "Contact" -> {
-                                navigator.popBackStack()
                                 navigator.navigate(ContactScreenDestination)
                             }
                         }

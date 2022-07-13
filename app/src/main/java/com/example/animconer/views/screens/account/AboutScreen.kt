@@ -1,4 +1,4 @@
-package com.example.animconer.presentation.screens.account
+package com.example.animconer.views.screens.account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -17,21 +17,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.animconer.R
-import com.example.animconer.presentation.ui.theme.PrimaryDark
-import com.example.animconer.presentation.ui.theme.SkyBlue
-import com.example.animconer.presentation.ui.theme.White
+import com.example.animconer.views.ui.theme.PrimaryDark
+import com.example.animconer.views.ui.theme.SkyBlue
+import com.example.animconer.views.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun AboutScreen() {
+fun AboutScreen(
+    navigator: DestinationsNavigator
+)
+{
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 8.dp, end = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        AboutAppBar()
+        AboutAppBar(navigator)
         Spacer(modifier = Modifier.height(8.dp))
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -59,7 +63,9 @@ fun AboutScreen() {
 }
 
 @Composable
-fun AboutAppBar() {
+fun AboutAppBar(
+    navigator: DestinationsNavigator
+) {
     TopAppBar(
         title = {
             Text(
@@ -70,7 +76,9 @@ fun AboutAppBar() {
             )
         },
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {
+                navigator.navigateUp()
+            }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     tint = White,
