@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -28,7 +29,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.example.animconer.R
+import com.example.animconer.model.anime.AnimeData
 import com.example.animconer.model.genres.Data
+import com.example.animconer.utils.LoadingAnimation
 import com.example.animconer.views.screens.destinations.DetailScreenDestination
 import com.example.animconer.views.ui.theme.PrimaryDark
 import com.example.animconer.views.ui.theme.SkyBlue
@@ -43,67 +46,18 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val state by viewModel.genresState
+    val animeState by viewModel.animeState
+    val genresState by viewModel.genresState
 
 
-    val anim = listOf(
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            type = "TV Series"
-        ),
-        Anims(
-            name = "The Greatest Demon Lord",
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            type = "TV Series"
-        ),
-    )
 
     Scaffold(
         backgroundColor = PrimaryDark
     )
     { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)) {
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
@@ -114,29 +68,63 @@ fun HomeScreen(
                             painter = painterResource(id = R.drawable.logo),
                             modifier = Modifier
                                 .size(100.dp)
-                                .align(Alignment.Center),
+                                .align(Center),
                             contentDescription = null
                         )
                     }
-                    item(span = { GridItemSpan(3)}){
+                    item(span = { GridItemSpan(3)}) {
                         Explore()
                     }
                     item(span = { GridItemSpan(3)}) {
-                        Genres(state.data)
+                        Genres(genresState.data)
                     }
-                    items(anim) { anim ->
+                    item(span = { GridItemSpan(3)}) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                    }
+                    items(animeState.data) { anim ->
                         AnimItem(
-                            imageUrl = anim.imageUrl,
-                            name = anim.name,
-                            type = anim.type,
+                            anim = anim,
                             navigator = navigator
                         )
                     }
                 })
+
+
+            if(animeState.isLoading){
+                LoadingAnimation(
+                    modifier = Modifier.align(Center),
+                    circleSize = 16.dp
+
+                )
+            }
+
+            if (animeState.error != null)
+            {
+                Text(
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Center)
+                        .padding(16.dp),
+                    text = "${animeState.error}",
+                    color = Color.Red
+                )
+            }
         }
     }
 }
 
+
+/*@Composable
+fun HomeAppBar() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+
+    }
+
+}*/
 
 @Composable
 fun Explore() {
@@ -182,7 +170,7 @@ fun Explore() {
 
 @Composable
 fun Genres(
-    genres:List<Data>
+    genres: List<Data>
 ) {
     Column(
         Modifier.fillMaxWidth()
@@ -224,15 +212,14 @@ fun Genres(
                 }
             }
         }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
 
 @Composable
 fun AnimItem(
-    imageUrl: String,
-    name: String,
-    type: String?,
+    anim:AnimeData,
     navigator: DestinationsNavigator,
     modifier: Modifier = Modifier
 ) {
@@ -247,7 +234,7 @@ fun AnimItem(
     ) {
         Image(
             painter = rememberImagePainter(
-                data = imageUrl,
+                data = anim.jpg?.imageUrl,
                 builder = {
                     placeholder(R.drawable.logo)
                     crossfade(true)
@@ -274,7 +261,7 @@ fun AnimItem(
             verticalArrangement = Arrangement.Bottom,
         ) {
             Text(
-                text = name,
+                text = anim.title,
                 maxLines = 1,
                 fontSize = 16.sp,
                 color = White,
@@ -287,13 +274,3 @@ fun AnimItem(
 
 }
 
-data class Anims(
-    val name: String,
-    val imageUrl: String,
-    val type: String,
-)
-
-data class Airing(
-    val imageUrl: String,
-    val name: String
-)

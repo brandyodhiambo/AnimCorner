@@ -1,9 +1,12 @@
 package com.example.animconer.data.repository
 
-import com.example.animconer.data.local.AnimeDatabase
+import com.example.animconer.data.local.database.AnimeDatabase
 import com.example.animconer.data.remote.ApiService
+import com.example.animconer.mappers.toAnimEntity
+import com.example.animconer.mappers.toAnimeData
 import com.example.animconer.mappers.toGenresData
 import com.example.animconer.mappers.toGenresEntity
+import com.example.animconer.model.anime.AnimeData
 import com.example.animconer.model.genres.Data
 import com.example.animconer.utils.Resource
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +45,30 @@ class AnimeRepo(
            }
        }.flowOn(Dispatchers.IO)
 
+    }
+
+    suspend fun getAnime():Flow<Resource<List<AnimeData>>>{
+        return flow {
+            val animeFromDB = database.animeDao.getAnime()
+            if (!animeFromDB.isNullOrEmpty()){
+                emit(Resource.Success(animeFromDB.map { it.toAnimeData() }))
+            } else{
+                try {
+                    val animeDataFromApi = apiService.getAnime()
+                    Timber.d("Response ${animeDataFromApi.data}")
+                    database.animeDao.insertAnime(animeDataFromApi.data.map { it.toAnimEntity() })
+                    val newAnimeDataFromDB = database.animeDao.getAnime()
+                    if (!newAnimeDataFromDB.isNullOrEmpty()){
+                        emit(Resource.Success(newAnimeDataFromDB.map { it.toAnimeData() }))
+                    }
+
+                } catch (e:HttpException){
+                    emit(Resource.Error("Unknown error occurred"))
+                } catch (e:IOException){
+                    emit(Resource.Error("Couldn't reach the server check your internet connection"))
+                }
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
 }

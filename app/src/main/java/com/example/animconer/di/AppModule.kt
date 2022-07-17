@@ -2,11 +2,13 @@ package com.example.animconer.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.animconer.data.local.AnimeDatabase
+import com.example.animconer.data.converters.Converter
+import com.example.animconer.data.local.database.AnimeDatabase
 import com.example.animconer.data.remote.ApiService
 import com.example.animconer.data.repository.AnimeRepo
 import com.example.animconer.utils.Constants.BASE_URL
 import com.example.animconer.views.screens.home.HomeViewModel
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,13 +46,20 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAnimeDatabase(@ApplicationContext context:Context):AnimeDatabase{
+    fun provideAnimeDatabase(@ApplicationContext context:Context,gson: Gson): AnimeDatabase {
         return Room.databaseBuilder(
             context,
             AnimeDatabase::class.java,
             "anime_database"
         )
             .fallbackToDestructiveMigration()
+            .addTypeConverter(Converter(gson))
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return Gson()
     }
 }
