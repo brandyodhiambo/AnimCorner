@@ -1,7 +1,7 @@
 package com.example.animconer.views.screens.detail
 
+import android.net.Uri
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,46 +32,38 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.animconer.R
+import com.example.animconer.model.AnimeData
 import com.example.animconer.views.screens.destinations.CharacterScreenDestination
 import com.example.animconer.views.ui.theme.LightGray
 import com.example.animconer.views.ui.theme.PrimaryDark
 import com.example.animconer.views.ui.theme.SkyBlue
 import com.example.animconer.views.ui.theme.White
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination
 @Composable
 fun DetailScreen(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    animeData: AnimeData
 ) {
 
     val context = LocalContext.current
-
-    val details = Details(
-        animationName = "Avengers from the west",
-        imageUrl = "https://tvovermind.com/wp-content/uploads/2018/06/47.jpg",
-        videoUrl = "https://www.youtube.com/watch?v=sGUVKc07xL8",
-        producer = "Wyner MacDonald",
-        type = "Movie",
-        description = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy."
-    )
-
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
         item {
             ImageBanner(
-                details.imageUrl,
-                details.type,
+                animeData,
                 onClick = {
                     navigator.navigateUp()
                 }
@@ -79,16 +71,12 @@ fun DetailScreen(
 
         }
         item {
-            AnimationDescription(
-                details.animationName,
-                details.producer,
-                details.description
-            )
+            AnimationDescription(animeData)
 
         }
         item {
             Trailer(
-                details.videoUrl,
+                animeData,
                 navigator
             )
         }
@@ -99,8 +87,7 @@ fun DetailScreen(
 
 @Composable
 fun ImageBanner(
-    imageUrl: String,
-    type: String,
+    animeData: AnimeData,
     onClick: () -> Unit = {}
 ) {
     Box(
@@ -109,12 +96,12 @@ fun ImageBanner(
             .height(400.dp)
     ) {
         Image(
-            painter = rememberImagePainter(
-                data = imageUrl,
-                builder = {
-                    placeholder(R.drawable.logo)
-                    crossfade(true)
-                }
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current)
+                    .data(data = animeData.images?.jpg?.imageUrl).apply(block = fun ImageRequest.Builder.() {
+                        placeholder(R.drawable.logo)
+                        crossfade(true)
+                    }).build()
             ),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
@@ -134,7 +121,7 @@ fun ImageBanner(
                 )
         )
         BackButton(onClick)
-        AnimationType(type)
+        AnimationType(animeData.type)
 
     }
 
@@ -183,7 +170,7 @@ fun BackButton(
 
 @Composable
 fun AnimationType(
-    type: String
+    type: String?
 ) {
     Row(
         modifier = Modifier
@@ -203,11 +190,13 @@ fun AnimationType(
                 elevation = 4.dp,
                 contentColor = White,
             ) {
-                Text(
-                    text = type,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(6.dp)
-                )
+                if (type != null) {
+                    Text(
+                        text = type,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(6.dp)
+                    )
+                }
             }
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
@@ -226,9 +215,7 @@ fun AnimationType(
 
 @Composable
 fun AnimationDescription(
-    animationName: String,
-    producer: String,
-    description: String
+   animeData: AnimeData
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -236,26 +223,30 @@ fun AnimationDescription(
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = animationName,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = SkyBlue,
-            textAlign = TextAlign.Start
-        )
+        animeData.title?.let {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = it,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = SkyBlue,
+                textAlign = TextAlign.Start
+            )
+        }
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = producer,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = White,
-            textAlign = TextAlign.Start
+        animeData.producers?.get(0)?.let {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = it.name,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = White,
+                textAlign = TextAlign.Start
 
-        )
+            )
+        }
         Spacer(modifier = Modifier.height(8.dp))
 
         var expanded by remember { mutableStateOf(false) }
@@ -268,21 +259,23 @@ fun AnimationDescription(
         val seeMoreSize = seeMoreSizeState.value
         val seeMoreOffset = seeMoreOffsetState.value
         Box {
-            Text(
-                text = description,
-                fontSize = 13.sp,
-                color = LightGray,
-                modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
+            animeData.synopsis?.let {
+                Text(
+                    text = it,
+                    fontSize = 13.sp,
+                    color = LightGray,
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    )
+                    {
+                        expanded = false
+                    },
+                    maxLines = if (expanded) Int.MAX_VALUE else 5,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { textLayoutResultState.value = it },
                 )
-                {
-                    expanded = false
-                },
-                maxLines = if (expanded) Int.MAX_VALUE else 5,
-                overflow = TextOverflow.Ellipsis,
-                onTextLayout = { textLayoutResultState.value = it },
-            )
+            }
             if (!expanded) {
                 val density = LocalDensity.current
                 Text(
@@ -318,7 +311,7 @@ fun AnimationDescription(
 
 @Composable
 fun Trailer(
-    videoLink: String,
+    animeData: AnimeData,
     navigator: DestinationsNavigator
 ) {
     Column(
@@ -362,47 +355,39 @@ fun Trailer(
         }
         Card(
             modifier = Modifier
-                .height(200.dp)
+                .height(300.dp)
                 .width(600.dp)
                 .padding(start = 8.dp, end = 8.dp)
         ) {
 
-            val mContext = LocalContext.current
-            val mVideoUrl = videoLink
+            val context = LocalContext.current
+            val uri = animeData.trailer?.url ?: "https://www.youtube.com/watch?v=F6Vf9_mOyXQ"
+            // Initializing ExoPLayer
+            val mExoPlayer = remember(context) {
+                ExoPlayer.Builder(context)
+                    .build()
+                    .apply {
+                    val mediaItem = MediaItem.Builder()
+                        .setUri(Uri.parse(uri))
+                        .build()
+                    setMediaItem(mediaItem)
 
-            // Declaring ExoPlayer
-            val mExoPlayer = remember(mContext) {
-                ExoPlayer.Builder(mContext).build().apply {
-                    val dataSourceFactory = DefaultDataSourceFactory(
-                        mContext,
-                        Util.getUserAgent(mContext, mContext.packageName)
-                    )
-                    /* val source =
-                         ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
-                             //Uri.parse(mVideoUrl)
-                         )*/
-                    prepare(/*source*/)
+                    prepare()
+                    playWhenReady = true
                 }
             }
-
             // Implementing ExoPlayer
             AndroidView(factory = { context ->
-                PlayerView(context).apply {
+                StyledPlayerView(context).apply {
                     player = mExoPlayer
+
                 }
             })
         }
+        Spacer(modifier = Modifier.height(8.dp))
 
     }
 }
 
-data class Details(
-    val animationName: String,
-    val imageUrl: String,
-    val videoUrl: String,
-    val producer: String,
-    val type: String,
-    val description: String
-)
 
 

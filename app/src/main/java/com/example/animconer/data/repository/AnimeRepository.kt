@@ -1,6 +1,8 @@
 package com.example.animconer.data.repository
 
+import androidx.lifecycle.LiveData
 import com.example.animconer.data.local.database.AnimeDatabase
+import com.example.animconer.data.local.entity.AnimeEntity
 import com.example.animconer.data.remote.ApiService
 import com.example.animconer.data.mappers.toAnimEntity
 import com.example.animconer.data.mappers.toAnimeData
@@ -69,6 +71,10 @@ class AnimeRepository(
                 }
             }
         }.flowOn(Dispatchers.IO)
+    }
+
+    fun getOneAnime(name: String): LiveData<AnimeEntity?> {
+        return database.animeDao.getOneAnime(name)
     }
 
 }

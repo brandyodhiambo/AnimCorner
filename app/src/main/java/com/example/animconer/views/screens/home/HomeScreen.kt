@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -36,6 +37,7 @@ import com.example.animconer.model.AnimeData
 import com.example.animconer.utils.LoadingAnimation
 import com.example.animconer.views.screens.destinations.DetailScreenDestination
 import com.example.animconer.views.ui.theme.PrimaryDark
+import com.example.animconer.views.ui.theme.SecondaryDark
 import com.example.animconer.views.ui.theme.SkyBlue
 import com.example.animconer.views.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
@@ -68,13 +70,13 @@ fun HomeScreen(
 
                 item(span = { GridItemSpan(3) }) {
                     TopSection(
-                        genresState.data
+                        genresState.data,viewModel
                     )
                 }
 
                 items(animeState.data) { anim ->
                     AnimeItem(
-                        anim = anim,
+                        animeData = anim,
                         navigator = navigator
                     )
                 }
@@ -104,7 +106,8 @@ fun HomeScreen(
 
 @Composable
 fun TopSection(
-    genres: List<String>
+    genres: List<String>,
+    viewModel: HomeViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
@@ -121,7 +124,7 @@ fun TopSection(
         )
 
         Text(
-            text = "TopSection",
+            text = "Top Section",
             fontSize = 24.sp,
             color = White,
             fontWeight = FontWeight.Bold,
@@ -132,7 +135,8 @@ fun TopSection(
         var text by remember { mutableStateOf("") }
 
         OutlinedTextField(
-            value = text,
+            value = viewModel.searchTerm.value,
+            maxLines = 1,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -140,27 +144,35 @@ fun TopSection(
                     contentDescription = null
                 )
             },
-            onValueChange = { text },
+            onValueChange = {
+                viewModel.setSearch(it)
+                viewModel.getOneAnime(it)
+                },
             label = {
                 Text(text = "Search", color = White, textAlign = TextAlign.Start)
             },
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = SkyBlue,
-                unfocusedBorderColor = White
+                unfocusedBorderColor = White,
+                textColor = Color.White
             ),
             modifier = Modifier
                 .padding(start = 8.dp, end = 6.dp)
                 .fillMaxWidth()
+                .clickable {
+
+                }
         )
-        Genres(genres)
+        Genres(genres,viewModel)
         Spacer(modifier = Modifier.height(2.dp))
     }
 }
 
 @Composable
 fun Genres(
-    genres: List<String>
+    genres: List<String>,
+    viewModel: HomeViewModel
 ) {
     Column(
         Modifier.fillMaxWidth()
@@ -179,27 +191,33 @@ fun Genres(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        LazyRow(modifier = Modifier.fillMaxWidth()) {
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             items(genres) { genres ->
-                Card(
-                    shape = RoundedCornerShape(4.dp),
-                    backgroundColor = SkyBlue,
-                    contentColor = White,
-                    elevation = 8.dp,
+                Text(
+                    color = Color.White,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 4.dp)
-
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        text = genres,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Justify
-                    )
-                }
+                        .clip(
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clickable {
+                            viewModel.setGenres(genres)
+                            viewModel.getAnime(viewModel.selectedGenres.value)
+                        }
+                        .background(
+                            if (genres == viewModel.selectedGenres.value) {
+                                SecondaryDark
+                            } else {
+                                SkyBlue
+                            }
+                        )
+                        .padding(16.dp),
+                    text = genres,
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Justify
+                )
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -209,7 +227,7 @@ fun Genres(
 
 @Composable
 fun AnimeItem(
-    anim: AnimeData,
+    animeData: AnimeData,
     navigator: DestinationsNavigator,
     modifier: Modifier = Modifier
 ) {
@@ -219,12 +237,12 @@ fun AnimeItem(
             .height(200.dp)
             .width(180.dp)
             .clickable {
-                navigator.navigate(DetailScreenDestination)
+                navigator.navigate(DetailScreenDestination(animeData = animeData))
             }
     ) {
         Image(
             painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current).data(data = anim.images?.jpg?.imageUrl)
+                ImageRequest.Builder(LocalContext.current).data(data = animeData.images?.jpg?.imageUrl)
                     .apply(block = fun ImageRequest.Builder.() {
                         placeholder(R.drawable.logo)
                         crossfade(true)
@@ -250,7 +268,7 @@ fun AnimeItem(
             Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
         ) {
-            anim.title?.let {
+            animeData.title?.let {
                 Text(
                     text = it,
                     maxLines = 1,

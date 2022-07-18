@@ -1,8 +1,11 @@
 package com.example.animconer.model
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class AnimeData(
     @SerializedName("airing")
     val airing: Boolean?,
@@ -32,4 +35,4 @@ data class AnimeData(
     val type: String?,
     @SerializedName("year")
     val year: Int?
-)
+) : Parcelable
