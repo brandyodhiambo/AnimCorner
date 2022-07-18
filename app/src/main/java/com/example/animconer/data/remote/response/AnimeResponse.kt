@@ -1,6 +1,8 @@
-package com.example.animconer.model.anime
+package com.example.animconer.data.remote.response
 
 
+import com.example.animconer.model.AnimeData
+import com.example.animconer.model.Pagination
 import com.google.gson.annotations.SerializedName
 
 data class AnimeResponse(

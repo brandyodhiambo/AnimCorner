@@ -8,8 +8,8 @@ import com.example.animconer.data.local.entity.AnimeEntity
 @Dao
 interface AnimeDao {
     @Insert
-    suspend fun insertAnime(anime:List<AnimeEntity>)
+    suspend fun insertAnime(anime: List<AnimeEntity>)
 
     @Query("SELECT *FROM table_anime")
-    fun getAnime():List<AnimeEntity>?
+    fun getAnime(): List<AnimeEntity>?
 }

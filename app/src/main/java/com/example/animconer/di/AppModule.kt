@@ -5,9 +5,9 @@ import androidx.room.Room
 import com.example.animconer.data.converters.Converter
 import com.example.animconer.data.local.database.AnimeDatabase
 import com.example.animconer.data.remote.ApiService
-import com.example.animconer.data.repository.AnimeRepo
+import com.example.animconer.data.repository.AnimeRepository
 import com.example.animconer.utils.Constants.BASE_URL
-import com.example.animconer.views.screens.home.HomeViewModel
+import com.example.animconer.utils.Constants.DATABASE_NAME
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -21,22 +21,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
-    fun provideHomeViewModel(animeRepo: AnimeRepo):HomeViewModel{
-        return HomeViewModel(animeRepo)
+    fun provideAnimeRepository(apiService: ApiService, database: AnimeDatabase): AnimeRepository {
+        return AnimeRepository(apiService, database)
     }
 
     @Provides
     @Singleton
-    fun provideAmineRepo(apiService: ApiService,database: AnimeDatabase):AnimeRepo{
-        return AnimeRepo(apiService,database)
-    }
-
-    @Provides
-    @Singleton
-    fun provideApiService():ApiService{
+    fun provideApiService(): ApiService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -46,11 +39,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAnimeDatabase(@ApplicationContext context:Context,gson: Gson): AnimeDatabase {
+    fun provideAnimeDatabase(@ApplicationContext context: Context, gson: Gson): AnimeDatabase {
         return Room.databaseBuilder(
             context,
             AnimeDatabase::class.java,
-            "anime_database"
+            DATABASE_NAME
         )
             .fallbackToDestructiveMigration()
             .addTypeConverter(Converter(gson))

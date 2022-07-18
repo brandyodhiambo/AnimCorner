@@ -27,8 +27,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun AboutScreen(
     navigator: DestinationsNavigator
-)
-{
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,7 +81,7 @@ fun AboutAppBar(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     tint = White,
-                    contentDescription =null
+                    contentDescription = null
                 )
 
             }

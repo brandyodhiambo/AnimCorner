@@ -76,12 +76,12 @@ fun AccountScreen(
                                 navigator.navigate(AboutScreenDestination)
                             }
                             "Rate us" -> {
-                               /*
-                               *   val rateIntent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("market://details?id=" + context.packageName)
-                                )
-                                startActivity(context, rateIntent, null)*/
+                                /*
+                                *   val rateIntent = Intent(
+                                     Intent.ACTION_VIEW,
+                                     Uri.parse("market://details?id=" + context.packageName)
+                                 )
+                                 startActivity(context, rateIntent, null)*/
                                 Toast.makeText(context, "Rate Us", Toast.LENGTH_SHORT).show()
                             }
                             "Share" -> {
@@ -106,7 +106,7 @@ fun AccountScreen(
             }
 
         }
-        
+
     }
 }
 
@@ -152,17 +152,16 @@ fun AccountDetails(
 
             }
             Spacer(modifier = Modifier.width(16.dp))
-           IconButton(onClick = {onClick()}) {
-               Icon(
-                   painter = painterResource(id = R.drawable.ic_chevron_right),
-                   tint = White,
-                   contentDescription = null
-               )
+            IconButton(onClick = { onClick() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_chevron_right),
+                    tint = White,
+                    contentDescription = null
+                )
 
-           }
+            }
 
         }
-
 
 
     }

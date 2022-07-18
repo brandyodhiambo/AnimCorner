@@ -1,9 +1,6 @@
 package com.example.animconer.views.screens.splash
 
 import android.os.Build.VERSION.SDK_INT
-import androidx.compose.animation.core.Animatable
-import android.view.animation.OvershootInterpolator
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,11 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
@@ -44,15 +39,6 @@ fun SplashScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-
-        val scale = remember {
-            Animatable(0f)
-        }
-
-        val overshootInterpolator = remember {
-            OvershootInterpolator(2.5f)
-        }
 
         LaunchedEffect(key1 = true) {
             withContext(Dispatchers.Main) {

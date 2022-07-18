@@ -1,9 +1,9 @@
-package com.example.animconer.model.anime
+package com.example.animconer.model
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Genre(
+data class Demographic(
     @SerializedName("mal_id")
     val malId: Int,
     @SerializedName("name")

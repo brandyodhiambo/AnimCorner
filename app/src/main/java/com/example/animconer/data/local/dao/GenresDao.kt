@@ -9,8 +9,8 @@ import com.example.animconer.data.local.entity.GenresEntity
 interface GenresDao {
 
     @Insert
-    suspend fun insertGenres(genres:List<GenresEntity>)
+    suspend fun insertGenres(genres: List<GenresEntity>)
 
     @Query("SELECT * FROM table_genres")
-    fun getGenres():List<GenresEntity>?
+    fun getGenres(): List<GenresEntity>?
 }

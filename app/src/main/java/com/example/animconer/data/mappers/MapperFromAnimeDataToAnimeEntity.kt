@@ -1,13 +1,13 @@
-package com.example.animconer.mappers
+package com.example.animconer.data.mappers
 
 import com.example.animconer.data.local.entity.AnimeEntity
-import com.example.animconer.model.anime.AnimeData
+import com.example.animconer.model.AnimeData
 
-fun AnimeEntity.toAnimeData():AnimeData{
-    return AnimeData(
+fun AnimeData.toAnimEntity():AnimeEntity{
+    return AnimeEntity(
         airing = airing,
         genres = genres,
-        jpg= jpg,
+        images= images,
         malId = malId,
         members = members,
         producers = producers,

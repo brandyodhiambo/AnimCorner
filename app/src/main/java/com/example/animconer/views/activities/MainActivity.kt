@@ -40,9 +40,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = PrimaryDark,
 
-                ) {
+                    ) {
 
-                    var showBottomBar: Boolean = true
+                    val showBottomBar: Boolean
                     val navController = rememberAnimatedNavController()
                     val navHostEngine = rememberNavHostEngine()
 
@@ -62,60 +62,60 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         backgroundColor = PrimaryDark,
                         bottomBar = {
-                           if(showBottomBar){
-                               BottomNavigation(
-                                   backgroundColor = SecondaryDark,
-                                   contentColor = SkyBlue,
-                                   modifier = Modifier
-                                       .padding(12.dp)
-                                       .shadow(
-                                           shape = RoundedCornerShape(15.dp),
-                                           clip = true,
-                                           elevation = 16.dp
-                                       ),
-                               ) {
-                                   val navBackStackEntry by navController.currentBackStackEntryAsState()
-                                   val currentDestination = navBackStackEntry?.destination
-                                   bottomItems.forEach { item ->
-                                       BottomNavigationItem(
-                                           icon = {
-                                               Icon(
-                                                   painter = painterResource(id = item.icon),
-                                                   contentDescription = null
-                                               )
-                                           },
-                                           label = {
-                                               Text(text = item.title)
-                                           },
-                                           alwaysShowLabel = true,
-                                           selectedContentColor = SkyBlue,
-                                           unselectedContentColor = White,
-                                           selected = currentDestination?.route?.contains(item.destination.route) == true,
+                            if (showBottomBar) {
+                                BottomNavigation(
+                                    backgroundColor = SecondaryDark,
+                                    contentColor = SkyBlue,
+                                    modifier = Modifier
+                                        .padding(12.dp)
+                                        .shadow(
+                                            shape = RoundedCornerShape(15.dp),
+                                            clip = true,
+                                            elevation = 16.dp
+                                        ),
+                                ) {
+                                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                                    val currentDestination = navBackStackEntry?.destination
+                                    bottomItems.forEach { item ->
+                                        BottomNavigationItem(
+                                            icon = {
+                                                Icon(
+                                                    painter = painterResource(id = item.icon),
+                                                    contentDescription = null
+                                                )
+                                            },
+                                            label = {
+                                                Text(text = item.title)
+                                            },
+                                            alwaysShowLabel = true,
+                                            selectedContentColor = SkyBlue,
+                                            unselectedContentColor = White,
+                                            selected = currentDestination?.route?.contains(item.destination.route) == true,
 
-                                           onClick = {
-                                               navController.navigate(item.destination.route) {
-                                                   navController.graph.startDestinationRoute?.let { screenRoute ->
-                                                       popUpTo(screenRoute) {
-                                                           saveState = true
-                                                       }
-                                                   }
-                                                   launchSingleTop = true
-                                                   restoreState = true
-                                               }
-                                           }
-                                       )
-                                   }
-                               }
-                           }
+                                            onClick = {
+                                                navController.navigate(item.destination.route) {
+                                                    navController.graph.startDestinationRoute?.let { screenRoute ->
+                                                        popUpTo(screenRoute) {
+                                                            saveState = true
+                                                        }
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        )
+                                    }
+                                }
+                            }
                         }
-                    ) {paddingValues ->
-                       Box(modifier = Modifier.padding(paddingValues)) {
-                           DestinationsNavHost(
-                               navGraph = NavGraphs.root,
-                               navController = navController,
-                               engine = navHostEngine
-                           )
-                       }
+                    ) { paddingValues ->
+                        Box(modifier = Modifier.padding(paddingValues)) {
+                            DestinationsNavHost(
+                                navGraph = NavGraphs.root,
+                                navController = navController,
+                                engine = navHostEngine
+                            )
+                        }
                     }
                 }
             }

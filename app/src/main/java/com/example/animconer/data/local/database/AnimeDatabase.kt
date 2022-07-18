@@ -11,7 +11,7 @@ import com.example.animconer.data.local.entity.GenresEntity
 
 @TypeConverters(Converter::class)
 @Database(entities = [GenresEntity::class, AnimeEntity::class], version = 1, exportSchema = false)
-abstract class AnimeDatabase:RoomDatabase() {
+abstract class AnimeDatabase : RoomDatabase() {
     abstract val genresDao: GenresDao
-    abstract val animeDao:AnimeDao
+    abstract val animeDao: AnimeDao
 }

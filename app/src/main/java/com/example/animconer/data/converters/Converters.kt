@@ -2,72 +2,79 @@ package com.example.animconer.data.converters
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
-import com.example.animconer.model.anime.*
+import com.example.animconer.model.Genre
+import com.example.animconer.model.Images
+import com.example.animconer.model.Producer
+import com.example.animconer.model.Trailer
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import org.json.JSONObject
 
 @ProvidedTypeConverter
-class Converter(private val gson: Gson){
+class Converter(private val gson: Gson) {
     @TypeConverter
-    fun toGenreString(parts:List<Genre>) : String{
+    fun toGenreString(parts: List<Genre>): String {
         return gson.toJson(
             parts,
-            object: TypeToken<ArrayList<Genre>>() {}.type
+            object : TypeToken<ArrayList<Genre>>() {}.type
         ) ?: "[]"
     }
+
     @TypeConverter
-    fun toGenres(parts:String):List<Genre>{
+    fun toGenres(parts: String): List<Genre> {
         return gson.fromJson<ArrayList<Genre>>(
             parts,
-            object:TypeToken<ArrayList<Genre>>() {}.type
+            object : TypeToken<ArrayList<Genre>>() {}.type
         ) ?: emptyList()
     }
 
+    /* @TypeConverter
+     fun fromJpg(images: Images?): String? {
+         return JSONObject().apply {
+             put("imageUrl", images?.jpg)
+             put("large_imageUrl",images?.webp)
+         }.toString()
+     }
+
+     @TypeConverter
+     fun toJpg(s: String?): Images? {
+         val json = JSONObject(s)
+         return Images(json.getString("imageUrl"),json.getString("large_imageUrl"))
+     }*/
+
     @TypeConverter
-    fun fromJpg(images: Jpg): String {
-        return JSONObject().apply {
-            put("imageUrl", images.imageUrl)
-            put("large_imageUrl",images.largeImageUrl)
-            put("small_imageUrl",images.smallImageUrl)
-        }.toString()
+    fun convertFromImagesToJSONString(images: Images): String {
+        return Gson().toJson(images)
     }
 
     @TypeConverter
-    fun toJpg(images: String): Jpg {
-        val json = JSONObject(images)
-        return Jpg(json.getString("jpg"),json.getString("large_imageUrl"),json.getString("small_imageUrl"))
+    fun convertFromJSOnStringToImages(jsonToConvert: String): Images {
+        return Gson().fromJson(jsonToConvert, Images::class.java)
     }
 
 
     @TypeConverter
-    fun fromProducer(producer:List<Producer>) : String{
+    fun fromProducer(producer: List<Producer>): String {
         return gson.toJson(
             producer,
-            object: TypeToken<ArrayList<Producer>>() {}.type
+            object : TypeToken<ArrayList<Producer>>() {}.type
         ) ?: "[]"
     }
+
     @TypeConverter
-    fun toProducer(producer:String):List<Producer>{
+    fun toProducer(producer: String): List<Producer> {
         return gson.fromJson<ArrayList<Producer>>(
             producer,
-            object:TypeToken<ArrayList<Producer>>() {}.type
+            object : TypeToken<ArrayList<Producer>>() {}.type
         ) ?: emptyList()
     }
 
     @TypeConverter
-    fun fromTrailer(trailer: Trailer): String {
-        return JSONObject().apply {
-            put("url", trailer.url)
-            put("youtube_id",trailer.youtubeId)
-        }.toString()
+    fun convertFromTrailersToJSONString(trailer: Trailer): String {
+        return Gson().toJson(trailer)
     }
 
     @TypeConverter
-    fun toTrailer(trailer: String): Trailer {
-        val json = JSONObject(trailer)
-        return Trailer(json.getString("url"),json.getString("youtube_id"))
+    fun convertFromJSOnStringToTrailer(jsonToConvert: String): Trailer {
+        return Gson().fromJson(jsonToConvert, Trailer::class.java)
     }
-
-
 }

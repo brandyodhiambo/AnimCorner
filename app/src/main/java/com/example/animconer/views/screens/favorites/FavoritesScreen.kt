@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.example.animconer.views.screens.favorites.common.RatingIndicator
 import com.example.animconer.views.ui.theme.PrimaryDark
 import com.example.animconer.views.ui.theme.SkyBlue
 import com.example.animconer.views.ui.theme.White
@@ -34,7 +33,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun FavoritesScreen() {
 
     val animItem = listOf(
-       Favorite(
+        Favorite(
             imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg",
             title = "The Demon Lord",
             releaseDate = "2022-03-12",
@@ -85,10 +84,10 @@ fun FavoritesScreen() {
         }
     ) {
         Column {
-            LazyVerticalGrid(columns = GridCells.Fixed(2)){
-               items(animItem){ animItem->
-                   AnimationItems(animItem = animItem)
-               }
+            LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                items(animItem) { animItem ->
+                    AnimationItems(animItem = animItem)
+                }
             }
         }
 
@@ -124,53 +123,54 @@ fun FavoriteAppBar() {
 
 @Composable
 fun AnimationItems(
-    animItem:Favorite
+    animItem: Favorite
 ) {
-   Card(
-       elevation = 4.dp,
-       //shape = RoundedCornerShape(6.dp),
-       modifier = Modifier.width(100.dp)
-           .height(300.dp)
-           .padding(4.dp)
-           //.shadow(5.dp, RoundedCornerShape(10.dp))
-           .clickable {
-               //Todo
-           }
-   ) {
-       Box {
-           Image(
-               painter = rememberImagePainter(
-                   data = animItem.imageUrl,
-                   builder = {
-                       placeholder(R.drawable.logo)
-                       crossfade(true)
-                   }
-               ),
-               modifier = Modifier.fillMaxSize(),
-               contentScale = ContentScale.Crop,
-               contentDescription = "Animation"
-           )
-           Box(
-               modifier = Modifier
-                   .fillMaxSize()
-                   .background(
-                       Brush.verticalGradient(
-                           colorStops = arrayOf(
-                               Pair(0.3f, Transparent),
-                               Pair(1.5f, PrimaryDark)
-                           )
-                       )
-                   )
-           )
-           AnimationDetails(
-               title = animItem.title,
-               releaseDate = animItem.releaseDate,
-               rating =animItem.rating
-           )
+    Card(
+        elevation = 4.dp,
+        //shape = RoundedCornerShape(6.dp),
+        modifier = Modifier
+            .width(100.dp)
+            .height(300.dp)
+            .padding(4.dp)
+            //.shadow(5.dp, RoundedCornerShape(10.dp))
+            .clickable {
+                //Todo
+            }
+    ) {
+        Box {
+            Image(
+                painter = rememberImagePainter(
+                    data = animItem.imageUrl,
+                    builder = {
+                        placeholder(R.drawable.logo)
+                        crossfade(true)
+                    }
+                ),
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                contentDescription = "Animation"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colorStops = arrayOf(
+                                Pair(0.3f, Transparent),
+                                Pair(1.5f, PrimaryDark)
+                            )
+                        )
+                    )
+            )
+            AnimationDetails(
+                title = animItem.title,
+                releaseDate = animItem.releaseDate,
+                rating = animItem.rating
+            )
 
-       }
+        }
 
-   }
+    }
 
 }
 

@@ -1,9 +1,9 @@
-package com.example.animconer.model.anime
+package com.example.animconer.model
 
 
 import com.google.gson.annotations.SerializedName
 
-data class To(
+data class From(
     @SerializedName("day")
     val day: Int,
     @SerializedName("month")

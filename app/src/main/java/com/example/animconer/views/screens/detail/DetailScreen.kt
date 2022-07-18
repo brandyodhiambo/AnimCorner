@@ -64,36 +64,36 @@ fun DetailScreen(
         description = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy."
     )
 
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            item {
-                ImageBanner(
-                    details.imageUrl,
-                    details.type,
-                    onClick = {
-                        navigator.navigateUp()
-                    }
-                )
-
-            }
-            item {
-                AnimationDescription(
-                    details.animationName,
-                    details.producer,
-                    details.description
-                )
-
-            }
-            item {
-                Trailer(
-                    details.videoUrl,
-                    navigator
-                )
-            }
+    LazyColumn(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            ImageBanner(
+                details.imageUrl,
+                details.type,
+                onClick = {
+                    navigator.navigateUp()
+                }
+            )
 
         }
+        item {
+            AnimationDescription(
+                details.animationName,
+                details.producer,
+                details.description
+            )
+
+        }
+        item {
+            Trailer(
+                details.videoUrl,
+                navigator
+            )
+        }
+
+    }
 
 }
 
@@ -143,7 +143,8 @@ fun ImageBanner(
 
 @Composable
 fun BackButton(
-    onClick: () -> Unit = {}) {
+    onClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp),
@@ -152,7 +153,7 @@ fun BackButton(
     ) {
         Button(
             onClick = {
-                      onClick()
+                onClick()
             },
             shape = CircleShape,
             contentPadding = PaddingValues(),
@@ -376,10 +377,10 @@ fun Trailer(
                         mContext,
                         Util.getUserAgent(mContext, mContext.packageName)
                     )
-                   /* val source =
-                        ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
-                            //Uri.parse(mVideoUrl)
-                        )*/
+                    /* val source =
+                         ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
+                             //Uri.parse(mVideoUrl)
+                         )*/
                     prepare(/*source*/)
                 }
             }

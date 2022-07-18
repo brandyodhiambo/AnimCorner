@@ -17,20 +17,22 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.animconer.R
-import com.example.animconer.model.anime.AnimeData
-import com.example.animconer.model.genres.Data
+import com.example.animconer.model.AnimeData
 import com.example.animconer.utils.LoadingAnimation
 import com.example.animconer.views.screens.destinations.DetailScreenDestination
 import com.example.animconer.views.ui.theme.PrimaryDark
@@ -49,48 +51,36 @@ fun HomeScreen(
     val animeState by viewModel.animeState
     val genresState by viewModel.genresState
 
-
-
     Scaffold(
         backgroundColor = PrimaryDark
     )
     { paddingValues ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
-                contentPadding = PaddingValues(8.dp),
-                content = {
-                    item(span = { GridItemSpan(3)}) {
-                        Image(
-                            painter = painterResource(id = R.drawable.logo),
-                            modifier = Modifier
-                                .size(100.dp)
-                                .align(Center),
-                            contentDescription = null
-                        )
-                    }
-                    item(span = { GridItemSpan(3)}) {
-                        Explore()
-                    }
-                    item(span = { GridItemSpan(3)}) {
-                        Genres(genresState.data)
-                    }
-                    item(span = { GridItemSpan(3)}) {
-                        Spacer(modifier = Modifier.height(2.dp))
-                    }
-                    items(animeState.data) { anim ->
-                        AnimItem(
-                            anim = anim,
-                            navigator = navigator
-                        )
-                    }
-                })
+                contentPadding = PaddingValues(8.dp)
+            ) {
 
+                item(span = { GridItemSpan(3) }) {
+                    TopSection(
+                        genresState.data
+                    )
+                }
 
-            if(animeState.isLoading){
+                items(animeState.data) { anim ->
+                    AnimeItem(
+                        anim = anim,
+                        navigator = navigator
+                    )
+                }
+            }
+
+            if (animeState.isLoading) {
                 LoadingAnimation(
                     modifier = Modifier.align(Center),
                     circleSize = 16.dp
@@ -98,8 +88,7 @@ fun HomeScreen(
                 )
             }
 
-            if (animeState.error != null)
-            {
+            if (animeState.error != null) {
                 Text(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -113,34 +102,35 @@ fun HomeScreen(
     }
 }
 
-
-/*@Composable
-fun HomeAppBar() {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-
-    }
-
-}*/
-
 @Composable
-fun Explore() {
+fun TopSection(
+    genres: List<String>
+) {
     Column(
         horizontalAlignment = Alignment.Start,
-        modifier = Modifier.fillMaxWidth()
-    ) {
+        modifier = Modifier.fillMaxWidth(),
+
+        ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            modifier = Modifier
+                .size(100.dp)
+                .align(CenterHorizontally),
+            contentDescription = null
+        )
+
         Text(
-            text = "Explore",
+            text = "TopSection",
             fontSize = 24.sp,
             color = White,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 8.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
+
         var text by remember { mutableStateOf("") }
+
         OutlinedTextField(
             value = text,
             leadingIcon = {
@@ -163,14 +153,14 @@ fun Explore() {
                 .padding(start = 8.dp, end = 6.dp)
                 .fillMaxWidth()
         )
-
-
+        Genres(genres)
+        Spacer(modifier = Modifier.height(2.dp))
     }
 }
 
 @Composable
 fun Genres(
-    genres: List<Data>
+    genres: List<String>
 ) {
     Column(
         Modifier.fillMaxWidth()
@@ -189,8 +179,8 @@ fun Genres(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        LazyRow(modifier = Modifier.fillMaxWidth()){
-            items(genres){ genres->
+        LazyRow(modifier = Modifier.fillMaxWidth()) {
+            items(genres) { genres ->
                 Card(
                     shape = RoundedCornerShape(4.dp),
                     backgroundColor = SkyBlue,
@@ -205,7 +195,7 @@ fun Genres(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
-                        text = genres.name,
+                        text = genres,
                         fontSize = 16.sp,
                         textAlign = TextAlign.Justify
                     )
@@ -218,8 +208,8 @@ fun Genres(
 
 
 @Composable
-fun AnimItem(
-    anim:AnimeData,
+fun AnimeItem(
+    anim: AnimeData,
     navigator: DestinationsNavigator,
     modifier: Modifier = Modifier
 ) {
@@ -233,12 +223,12 @@ fun AnimItem(
             }
     ) {
         Image(
-            painter = rememberImagePainter(
-                data = anim.jpg?.imageUrl,
-                builder = {
-                    placeholder(R.drawable.logo)
-                    crossfade(true)
-                }
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current).data(data = anim.images?.jpg?.imageUrl)
+                    .apply(block = fun ImageRequest.Builder.() {
+                        placeholder(R.drawable.logo)
+                        crossfade(true)
+                    }).build()
             ),
             modifier = modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
@@ -260,14 +250,16 @@ fun AnimItem(
             Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
         ) {
-            Text(
-                text = anim.title,
-                maxLines = 1,
-                fontSize = 16.sp,
-                color = White,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(start = 8.dp)
-            )
+            anim.title?.let {
+                Text(
+                    text = it,
+                    maxLines = 1,
+                    fontSize = 16.sp,
+                    color = White,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(4.dp))
         }
     }

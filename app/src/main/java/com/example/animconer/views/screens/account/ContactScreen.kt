@@ -70,26 +70,26 @@ fun ContactScreen(
             )
             items(contactItems) { items ->
                 ContactDetails(items = items, onClick = {
-                    when(items.title){
-                        "GitHub"->{
+                    when (items.title) {
+                        "GitHub" -> {
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.data =
                                 Uri.parse("https://github.com/brandy-kay")
                             startActivity(context, intent, null)
                         }
-                        "LinkedIn"->{
+                        "LinkedIn" -> {
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.data =
                                 Uri.parse("https://www.linkedin.com/in/brandy-odhiambo-989615202/")
                             startActivity(context, intent, null)
                         }
-                        "Twitter"->{
+                        "Twitter" -> {
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.data =
                                 Uri.parse("https://twitter.com/Arianabrandy5")
                             startActivity(context, intent, null)
                         }
-                        "Facebook"->{
+                        "Facebook" -> {
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.data =
                                 Uri.parse("https://www.facebook.com/ariana.brandy.79/")
@@ -168,7 +168,7 @@ fun ContactDetails(
         ) {
             Icon(
                 painter = painterResource(id = items.icon),
-               tint = SkyBlue,
+                tint = SkyBlue,
                 contentDescription = null
             )
         }
