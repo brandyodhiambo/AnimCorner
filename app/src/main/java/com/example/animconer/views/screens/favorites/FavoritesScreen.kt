@@ -2,6 +2,8 @@ package com.example.animconer.views.screens.favorites
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxSize
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,14 +25,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
+import coil.compose.rememberImagePainter
 import com.example.animconer.views.ui.theme.PrimaryDark
 import com.example.animconer.views.ui.theme.SkyBlue
 import com.example.animconer.R
@@ -38,6 +38,7 @@ import com.example.animconer.data.local.entity.Favorite
 import com.example.animconer.views.screens.destinations.DetailScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination
@@ -48,7 +49,7 @@ fun FavoritesScreen(
 ) {
 
 
-    val openDialog = remember{ mutableStateOf(false)}
+    val openDialog = remember { mutableStateOf(false) }
     val allFavoriteAnime = viewModel.allFavorites.observeAsState(initial = emptyList())
 
     Scaffold(
@@ -79,7 +80,7 @@ fun FavoritesScreen(
         }
     ) {
         Box {
-            if (allFavoriteAnime.value.isEmpty()){
+            if (allFavoriteAnime.value.isEmpty()) {
                 Column(
                     Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -106,7 +107,7 @@ fun FavoritesScreen(
         }
 
     }
-    if (openDialog.value){
+    if (openDialog.value) {
         AlertDialog(
             modifier = Modifier
                 .fillMaxWidth()
@@ -160,17 +161,18 @@ fun AnimationItems(
             .height(300.dp)
             .padding(4.dp)
             .clickable {
-                navigator.navigate(DetailScreenDestination(viewModel.getOneAnime(favorite.malId)))
+                val animeData = viewModel.getOneAnime(favorite.malId)
+                navigator.navigate(DetailScreenDestination(animeData))
             }
     ) {
         Box {
             Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current)
-                        .data(data = favorite.images?.jpg?.imageUrl).apply(block = fun ImageRequest.Builder.() {
-                            placeholder(R.drawable.logo)
-                            crossfade(true)
-                        }).build()
+                painter = rememberImagePainter(
+                    data = favorite.images?.jpg?.imageUrl,
+                    builder = {
+                        placeholder(R.drawable.logo)
+                        crossfade(true)
+                    }
                 ),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -201,8 +203,8 @@ fun AnimationItems(
 
 @Composable
 fun AnimationDetails(
-   favorite: Favorite,
-   viewModel: FavoriteViewModel
+    favorite: Favorite,
+    viewModel: FavoriteViewModel
 ) {
     Row(
         modifier = Modifier

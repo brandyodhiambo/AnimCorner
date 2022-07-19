@@ -52,6 +52,7 @@ object AppModule {
             AnimeDatabase::class.java,
             DATABASE_NAME
         )
+            .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .addTypeConverter(Converter(gson))
             .build()

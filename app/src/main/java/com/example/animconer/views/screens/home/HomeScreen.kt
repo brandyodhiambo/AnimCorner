@@ -23,15 +23,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
+import coil.compose.rememberImagePainter
 import com.example.animconer.R
 import com.example.animconer.model.AnimeData
 import com.example.animconer.utils.LoadingAnimation
@@ -241,12 +239,12 @@ fun AnimeItem(
             }
     ) {
         Image(
-            painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current).data(data = animeData.images?.jpg?.imageUrl)
-                    .apply(block = fun ImageRequest.Builder.() {
-                        placeholder(R.drawable.logo)
-                        crossfade(true)
-                    }).build()
+            painter = rememberImagePainter(
+                data = animeData.images?.jpg?.imageUrl,
+                builder = {
+                    placeholder(R.drawable.logo)
+                    crossfade(true)
+                }
             ),
             modifier = modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
