@@ -2,6 +2,7 @@ package com.example.animconer.views.screens.detail
 
 import android.net.Uri
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -32,11 +34,17 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.animconer.BuildConfig
 import com.example.animconer.R
+import com.example.animconer.data.local.entity.Favorite
 import com.example.animconer.model.AnimeData
+import com.example.animconer.model.Images
+import com.example.animconer.utils.FavoriteButtons
 import com.example.animconer.views.screens.destinations.CharacterScreenDestination
+import com.example.animconer.views.screens.favorites.FavoriteViewModel
 import com.example.animconer.views.ui.theme.LightGray
 import com.example.animconer.views.ui.theme.PrimaryDark
 import com.example.animconer.views.ui.theme.SkyBlue
@@ -44,6 +52,10 @@ import com.example.animconer.views.ui.theme.White
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.google.android.youtube.player.YouTubeBaseActivity
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -53,10 +65,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun DetailScreen(
     navigator: DestinationsNavigator,
-    animeData: AnimeData
+    animeData: AnimeData,
+    viewModel: FavoriteViewModel = hiltViewModel()
 ) {
 
-    val context = LocalContext.current
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
@@ -66,7 +78,8 @@ fun DetailScreen(
                 animeData,
                 onClick = {
                     navigator.navigateUp()
-                }
+                },
+                viewModel = viewModel
             )
 
         }
@@ -88,6 +101,7 @@ fun DetailScreen(
 @Composable
 fun ImageBanner(
     animeData: AnimeData,
+    viewModel: FavoriteViewModel,
     onClick: () -> Unit = {}
 ) {
     Box(
@@ -121,7 +135,7 @@ fun ImageBanner(
                 )
         )
         BackButton(onClick)
-        AnimationType(animeData.type)
+        AnimationType(animeData,viewModel)
 
     }
 
@@ -170,7 +184,8 @@ fun BackButton(
 
 @Composable
 fun AnimationType(
-    type: String?
+    animeData: AnimeData,
+    viewModel: FavoriteViewModel
 ) {
     Row(
         modifier = Modifier
@@ -190,23 +205,37 @@ fun AnimationType(
                 elevation = 4.dp,
                 contentColor = White,
             ) {
-                if (type != null) {
+                if (animeData.type != null) {
                     Text(
-                        text = type,
+                        text = animeData.type,
                         fontSize = 16.sp,
                         modifier = Modifier.padding(6.dp)
                     )
                 }
             }
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = null,
-                    tint = SkyBlue,
-                    modifier = Modifier.size(40.dp)
-                )
-
-            }
+            val context = LocalContext.current
+            FavoriteButtons(
+                isLiked = animeData.malId?.let { viewModel.isFavorite(it).observeAsState().value } != null,
+                onClick = { isLiked->
+                    if (isLiked){
+                        Toast.makeText(context, "You Have Already liked this", Toast.LENGTH_SHORT).show()
+                    } else{
+                        animeData.malId?.let {
+                            Favorite(
+                                malId = it,
+                                title =  animeData.title,
+                                images = animeData.images,
+                                rating = animeData.rating ,
+                                isFavorite = true ,
+                            )
+                        }?.let {
+                            viewModel.insertFavorite(
+                                it
+                            )
+                        }
+                    }
+                }
+            )
         }
 
 
@@ -253,10 +282,6 @@ fun AnimationDescription(
         val textLayoutResultState = remember { mutableStateOf<TextLayoutResult?>(null) }
         val seeMoreSizeState = remember { mutableStateOf<IntSize?>(null) }
         val seeMoreOffsetState = remember { mutableStateOf<Offset?>(null) }
-
-        // getting raw values for smart cast
-        val textLayoutResult = textLayoutResultState.value
-        val seeMoreSize = seeMoreSizeState.value
         val seeMoreOffset = seeMoreOffsetState.value
         Box {
             animeData.synopsis?.let {
@@ -362,6 +387,35 @@ fun Trailer(
 
             val context = LocalContext.current
             val uri = animeData.trailer?.url ?: "https://www.youtube.com/watch?v=F6Vf9_mOyXQ"
+
+
+          /*  AndroidView(
+                factory = {
+                    val videoView = YouTubePlayerView(context.applicationContext as YouTubeBaseActivity)
+                    videoView.initialize(
+                        BuildConfig.YOUTUBE_API_KEY,
+                        object : YouTubePlayer.OnInitializedListener {
+                            override fun onInitializationSuccess(
+                                provider: YouTubePlayer.Provider?,
+                                player: YouTubePlayer?,
+                                wasRestored: Boolean
+                            ) {
+                                player?.loadVideo(uri)
+                            }
+                            override fun onInitializationFailure(
+                                p0: YouTubePlayer.Provider?,
+                                p1: YouTubeInitializationResult?
+                            ) {
+                                Toast.makeText(context, "Video Player Failed", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
+                    videoView
+                },
+                    update = { }
+            )*/
+            //todo: fix this
+
             // Initializing ExoPLayer
             val mExoPlayer = remember(context) {
                 ExoPlayer.Builder(context)
@@ -385,7 +439,6 @@ fun Trailer(
             })
         }
         Spacer(modifier = Modifier.height(8.dp))
-
     }
 }
 

@@ -6,6 +6,7 @@ import com.example.animconer.data.converters.Converter
 import com.example.animconer.data.local.database.AnimeDatabase
 import com.example.animconer.data.remote.ApiService
 import com.example.animconer.data.repository.AnimeRepository
+import com.example.animconer.data.repository.FavoriteRepository
 import com.example.animconer.utils.Constants.BASE_URL
 import com.example.animconer.utils.Constants.DATABASE_NAME
 import com.google.gson.Gson
@@ -25,6 +26,12 @@ object AppModule {
     @Singleton
     fun provideAnimeRepository(apiService: ApiService, database: AnimeDatabase): AnimeRepository {
         return AnimeRepository(apiService, database)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteRepository( database: AnimeDatabase): FavoriteRepository {
+        return FavoriteRepository( database)
     }
 
     @Provides

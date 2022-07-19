@@ -8,143 +8,169 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.animconer.views.ui.theme.PrimaryDark
 import com.example.animconer.views.ui.theme.SkyBlue
-import com.example.animconer.views.ui.theme.White
 import com.example.animconer.R
+import com.example.animconer.data.local.entity.Favorite
+import com.example.animconer.views.screens.destinations.DetailScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination
 @Composable
-fun FavoritesScreen() {
+fun FavoritesScreen(
+    navigator: DestinationsNavigator,
+    viewModel: FavoriteViewModel = hiltViewModel()
+) {
 
-    val animItem = listOf(
-        Favorite(
-            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg",
-            title = "The Demon Lord",
-            releaseDate = "2022-03-12",
-            rating = 8F
-        ),
-        Favorite(
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            title = "The Demon Lord",
-            releaseDate = "2022-03-12",
-            rating = 7F
-        ),
-        Favorite(
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            title = "The Demon Lord",
-            releaseDate = "2022-03-12",
-            rating = 8F
-        ),
-        Favorite(
-            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg",
-            title = "The Demon Lord",
-            releaseDate = "2022-03-12",
-            rating = 9F
-        ),
-        Favorite(
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            title = "The Demon Lord",
-            releaseDate = "2022-03-12",
-            rating = 7F
-        ),
-        Favorite(
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1185/117548.jpg",
-            title = "The Demon Lord",
-            releaseDate = "2022-03-12",
-            rating = 9F
-        ),
-        Favorite(
-            imageUrl = "https://www.whatsappimages.in/wp-content/uploads/2021/12/Free-Sad-Cartoon-Images-Wallpaper-2.jpg",
-            title = "The Demon Lord",
-            releaseDate = "2022-03-12",
-            rating = 8F
-        ),
-    )
+
+    val openDialog = remember{ mutableStateOf(false)}
+    val allFavoriteAnime = viewModel.allFavorites.observeAsState(initial = emptyList())
 
     Scaffold(
         backgroundColor = PrimaryDark,
         topBar = {
-            FavoriteAppBar()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Favorites",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = SkyBlue,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+                IconButton(onClick = {
+                    openDialog.value = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null,
+                        tint = SkyBlue
+                    )
+                }
+            }
         }
     ) {
-        Column {
+        Box {
+            if (allFavoriteAnime.value.isEmpty()){
+                Column(
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .size(250.dp),
+                        painter = painterResource(id = R.drawable.ic_empty),
+                        contentDescription = null
+                    )
+                }
+            }
+
             LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                items(animItem) { animItem ->
-                    AnimationItems(animItem = animItem)
+                items(allFavoriteAnime.value) { animItem ->
+                    AnimationItems(
+                        animItem,
+                        navigator,
+                        viewModel
+                    )
                 }
             }
         }
 
     }
-
-}
-
-@Composable
-fun FavoriteAppBar() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = "Favorites",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = SkyBlue,
-            modifier = Modifier.padding(start = 8.dp)
+    if (openDialog.value){
+        AlertDialog(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            title = {
+                Text(text = "Delete All favorite Animations")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.deleteAllFavorites()
+                        openDialog.value = false
+                    },
+                    colors = ButtonDefaults.buttonColors(SkyBlue)
+                ) {
+                    Text(text = "Yes", color = Color.White)
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        openDialog.value = false
+                    },
+                    colors = ButtonDefaults.buttonColors(SkyBlue)
+                ) {
+                    Text(text = "No", color = Color.White)
+                }
+            },
+            backgroundColor = Color.White,
+            contentColor = Color.Black,
+            shape = RoundedCornerShape(10.dp)
         )
-        IconButton(onClick = {
-            //Todo
-        }) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = null,
-                tint = SkyBlue
-            )
-        }
     }
+
 }
+
 
 @Composable
 fun AnimationItems(
-    animItem: Favorite
+    favorite: Favorite,
+    navigator: DestinationsNavigator,
+    viewModel: FavoriteViewModel
 ) {
     Card(
         elevation = 4.dp,
-        //shape = RoundedCornerShape(6.dp),
         modifier = Modifier
             .width(100.dp)
             .height(300.dp)
             .padding(4.dp)
-            //.shadow(5.dp, RoundedCornerShape(10.dp))
             .clickable {
-                //Todo
+                navigator.navigate(DetailScreenDestination(viewModel.getOneAnime(favorite.malId)))
             }
     ) {
         Box {
             Image(
-                painter = rememberImagePainter(
-                    data = animItem.imageUrl,
-                    builder = {
-                        placeholder(R.drawable.logo)
-                        crossfade(true)
-                    }
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(data = favorite.images?.jpg?.imageUrl).apply(block = fun ImageRequest.Builder.() {
+                            placeholder(R.drawable.logo)
+                            crossfade(true)
+                        }).build()
                 ),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -163,9 +189,8 @@ fun AnimationItems(
                     )
             )
             AnimationDetails(
-                title = animItem.title,
-                releaseDate = animItem.releaseDate,
-                rating = animItem.rating
+                favorite = favorite,
+                viewModel = viewModel
             )
 
         }
@@ -176,9 +201,8 @@ fun AnimationItems(
 
 @Composable
 fun AnimationDetails(
-    title: String,
-    releaseDate: String,
-    rating: Float
+   favorite: Favorite,
+   viewModel: FavoriteViewModel
 ) {
     Row(
         modifier = Modifier
@@ -193,17 +217,31 @@ fun AnimationDetails(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(
-                    text = title,
-                    color = White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = releaseDate,
-                    color = White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Light
+                favorite.title?.let {
+                    Text(
+                        text = it,
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                favorite.rating?.let {
+                    Text(
+                        text = it,
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Light
+                    )
+                }
+            }
+
+            IconButton(onClick = {
+                viewModel.deleteOneFavorite(favorite)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Clear,
+                    tint = Color.White,
+                    contentDescription = null
                 )
             }
 
@@ -211,11 +249,5 @@ fun AnimationDetails(
 
     }
 
-}
 
-data class Favorite(
-    val imageUrl: String,
-    val title: String,
-    val releaseDate: String,
-    val rating: Float
-)
+}

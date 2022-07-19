@@ -28,10 +28,13 @@ android {
         versionCode 1
         versionName "1.0"
 
+
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField("String", "YOUTUBE_API_KEY", YOUTUBE_API_KEY)
     }
 
     buildTypes {
@@ -68,6 +71,7 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation files('lib/YouTubeAndroidPlayerApi.jar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
