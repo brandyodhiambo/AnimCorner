@@ -6,6 +6,9 @@ import com.example.animconer.model.Genre
 import com.example.animconer.model.Images
 import com.example.animconer.model.Producer
 import com.example.animconer.model.Trailer
+import com.example.animconer.model.characters.CharacterData
+import com.example.animconer.model.characters.ImagesPerson
+import com.example.animconer.model.characters.Person
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -68,6 +71,23 @@ class Converter(private val gson: Gson) {
         ) ?: emptyList()
     }
 
+
+    @TypeConverter
+    fun fromListOfCharacter(characters: List<CharacterData>): String {
+        return gson.toJson(
+            characters,
+            object : TypeToken<ArrayList<CharacterData>>() {}.type
+        ) ?: "[]"
+    }
+
+    @TypeConverter
+    fun toListOfCharacter(characters: String): List<CharacterData> {
+        return gson.fromJson<ArrayList<CharacterData>>(
+            characters,
+            object : TypeToken<ArrayList<CharacterData>>() {}.type
+        ) ?: emptyList()
+    }
+
     @TypeConverter
     fun convertFromTrailersToJSONString(trailer: Trailer): String {
         return Gson().toJson(trailer)
@@ -76,5 +96,15 @@ class Converter(private val gson: Gson) {
     @TypeConverter
     fun convertFromJSOnStringToTrailer(jsonToConvert: String): Trailer {
         return Gson().fromJson(jsonToConvert, Trailer::class.java)
+    }
+
+    @TypeConverter
+    fun convertFromPersonToJSONString(person: Person): String {
+        return Gson().toJson(person)
+    }
+
+    @TypeConverter
+    fun convertFromJSOnStringToPerson(jsonToConvert: String): Person {
+        return Gson().fromJson(jsonToConvert, Person::class.java)
     }
 }

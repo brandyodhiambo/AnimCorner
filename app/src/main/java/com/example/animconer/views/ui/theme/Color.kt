@@ -8,7 +8,6 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
 //project colors
-val Pink = Color(0xFFD94061)
 val SkyBlue = Color(0xFF2288E0)
 val Brown = Color(0xFFB4a077)
 val LightBlue = Color(0xFF51c4ef)

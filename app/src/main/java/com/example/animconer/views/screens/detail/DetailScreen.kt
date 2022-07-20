@@ -1,7 +1,7 @@
 package com.example.animconer.views.screens.detail
 
-import android.net.Uri
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,8 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -33,29 +31,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.animconer.BuildConfig
 import com.example.animconer.R
 import com.example.animconer.data.local.entity.Favorite
 import com.example.animconer.model.AnimeData
-import com.example.animconer.model.Images
 import com.example.animconer.utils.FavoriteButtons
+import com.example.animconer.views.activities.YoutubeActivity
 import com.example.animconer.views.screens.destinations.CharacterScreenDestination
 import com.example.animconer.views.screens.favorites.FavoriteViewModel
 import com.example.animconer.views.ui.theme.LightGray
 import com.example.animconer.views.ui.theme.PrimaryDark
 import com.example.animconer.views.ui.theme.SkyBlue
 import com.example.animconer.views.ui.theme.White
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.youtube.player.YouTubeBaseActivity
-import com.google.android.youtube.player.YouTubeInitializationResult
-import com.google.android.youtube.player.YouTubePlayer
-import com.google.android.youtube.player.YouTubePlayerView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -360,7 +349,7 @@ fun Trailer(
             Row(
                 modifier = Modifier.clickable {
                     navigator.popBackStack()
-                    navigator.navigate(CharacterScreenDestination)
+                    navigator.navigate(CharacterScreenDestination(animeData))
                 },
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
@@ -380,63 +369,27 @@ fun Trailer(
         }
         Card(
             modifier = Modifier
-                .height(300.dp)
+                .height(250.dp)
                 .width(600.dp)
-                .padding(start = 8.dp, end = 8.dp)
+
+                .padding(start = 8.dp, end = 8.dp),
+            backgroundColor = Color.Black
         ) {
-
             val context = LocalContext.current
-            val uri = animeData.trailer?.url ?: "https://www.youtube.com/watch?v=F6Vf9_mOyXQ"
-
-
-          /*  AndroidView(
-                factory = {
-                    val videoView = YouTubePlayerView(context.applicationContext as YouTubeBaseActivity)
-                    videoView.initialize(
-                        BuildConfig.YOUTUBE_API_KEY,
-                        object : YouTubePlayer.OnInitializedListener {
-                            override fun onInitializationSuccess(
-                                provider: YouTubePlayer.Provider?,
-                                player: YouTubePlayer?,
-                                wasRestored: Boolean
-                            ) {
-                                player?.loadVideo(uri)
-                            }
-                            override fun onInitializationFailure(
-                                p0: YouTubePlayer.Provider?,
-                                p1: YouTubeInitializationResult?
-                            ) {
-                                Toast.makeText(context, "Video Player Failed", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    )
-                    videoView
+            val youtube_video_id = animeData.trailer?.youtubeId?: "qig4KOK2R2g"
+            val name = animeData.title
+            Image(
+                painter = painterResource(id = R.drawable.ic_youtube),
+                modifier = Modifier
+                    .size(30.dp)
+                    .clickable {
+                  val intent = Intent(context,YoutubeActivity::class.java)
+                    intent.putExtra("EXTRA_YOUTUBE_VIDEO_ID",youtube_video_id)
+                    intent.putExtra("EXTRA_ANIME_NAME",name)
+                    context.startActivity(intent)
                 },
-                    update = { }
-            )*/
-            //todo: fix this
-
-            // Initializing ExoPLayer
-            val mExoPlayer = remember(context) {
-                ExoPlayer.Builder(context)
-                    .build()
-                    .apply {
-                    val mediaItem = MediaItem.Builder()
-                        .setUri(Uri.parse(uri))
-                        .build()
-                    setMediaItem(mediaItem)
-
-                    prepare()
-                    playWhenReady = true
-                }
-            }
-            // Implementing ExoPlayer
-            AndroidView(factory = { context ->
-                StyledPlayerView(context).apply {
-                    player = mExoPlayer
-
-                }
-            })
+                contentDescription = null
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
     }

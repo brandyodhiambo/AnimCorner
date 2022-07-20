@@ -31,7 +31,7 @@ class AnimeRepository(
             } else {
                 try {
                     val genreFromApi = apiService.getGenres()
-                    Timber.d("Data : $genreFromApi")
+                    Timber.d("CharacterData : $genreFromApi")
                     database.genresDao.insertGenres(genreFromApi.data.map { it.toGenresEntity() })
 
                     val newGenresFromdb = database.genresDao.getGenres()
