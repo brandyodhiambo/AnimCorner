@@ -376,12 +376,13 @@ fun Trailer(
             backgroundColor = Color.Black
         ) {
             val context = LocalContext.current
-            val youtube_video_id = animeData.trailer?.youtubeId?: "qig4KOK2R2g"
+            val youtube_video_id = animeData.trailer?.youtubeId ?: "qig4KOK2R2g"
             val name = animeData.title
             Image(
                 painter = painterResource(id = R.drawable.ic_youtube),
                 modifier = Modifier
-                    .size(30.dp)
+                    .height(20.dp)
+                    .width(30.dp)
                     .clickable {
                   val intent = Intent(context,YoutubeActivity::class.java)
                     intent.putExtra("EXTRA_YOUTUBE_VIDEO_ID",youtube_video_id)
