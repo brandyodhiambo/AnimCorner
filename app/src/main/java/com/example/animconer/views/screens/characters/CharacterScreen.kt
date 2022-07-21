@@ -23,7 +23,6 @@ import coil.compose.rememberImagePainter
 import com.example.animconer.R
 import com.example.animconer.model.AnimeData
 import com.example.animconer.model.characters.CharacterData
-import com.example.animconer.model.characters.Person
 import com.example.animconer.views.ui.theme.PrimaryDark
 import com.example.animconer.views.ui.theme.White
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
@@ -81,7 +80,7 @@ fun CastAppBar(navigator: DestinationsNavigator) {
    TopAppBar(
        title = {
            Text(
-               text = "Cast",
+               text = "Cast Voice",
                fontSize = 24.sp,
                color = White,
                fontWeight = FontWeight.SemiBold

@@ -5,12 +5,10 @@ import com.example.animconer.data.mappers.toCharacterEntity
 import com.example.animconer.data.mappers.toCharacterResponse
 import com.example.animconer.data.remote.ApiService
 import com.example.animconer.data.remote.response.CharactersResponse
-import com.example.animconer.model.characters.CharacterData
 import com.example.animconer.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
-import timber.log.Timber
 import java.io.IOException
 
 class CharactersRespository(
