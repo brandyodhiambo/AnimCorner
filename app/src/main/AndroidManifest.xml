@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.animconer">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".AnimConerApp"
+        android:name=".AnimCornerApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AnimConer">
+        android:theme="@style/Theme.AnimConer"
+        android:usesCleartextTraffic="true">
         <activity
-            android:name=".presentation.activities.MainActivity"
+            android:name=".views.activities.MainActivity2"
+            android:exported="false" />
+        <activity
+            android:theme="@style/Theme.AppCompat"
+            android:name=".views.activities.YoutubeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.activities.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.AnimConer">
