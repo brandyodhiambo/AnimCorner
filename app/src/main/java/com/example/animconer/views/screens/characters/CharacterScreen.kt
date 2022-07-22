@@ -51,57 +51,57 @@ fun CharacterScreen(
         }
     ) {
 
-       Box(Modifier.fillMaxSize()) {
-           LazyStaggeredGrid(cells = StaggeredCells.Adaptive(minSize = 180.dp)) {
+        Box(Modifier.fillMaxSize()) {
+            LazyStaggeredGrid(cells = StaggeredCells.Adaptive(minSize = 180.dp)) {
 
-               items(characterState.characters) { character ->
+                items(characterState.characters) { character ->
 
-                   Timber.d(character.person.name)
+                    Timber.d(character.person.name)
 
-                   val random: Double = 100 + Math.random() * (500 - 100)
-                   Character(
-                       characterData = character,
-                       modifier = Modifier
-                           .height(random.dp)
-                           .width(200.dp)
-                   )
-               }
-           }
+                    val random: Double = 100 + Math.random() * (500 - 100)
+                    Character(
+                        characterData = character,
+                        modifier = Modifier
+                            .height(random.dp)
+                            .width(200.dp)
+                    )
+                }
+            }
 
-           if (characterState.isLoading){
-               CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-           }
-       }
+            if (characterState.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
+        }
     }
 
 }
 
 @Composable
 fun CastAppBar(navigator: DestinationsNavigator) {
-   TopAppBar(
-       title = {
-           Text(
-               text = "Cast",
-               fontSize = 24.sp,
-               color = White,
-               fontWeight = FontWeight.SemiBold
-           )
-       },
-       navigationIcon = {
-           IconButton(onClick = {
-               navigator.popBackStack()
-               navigator.navigateUp()
-           }) {
-               Icon(
-                   imageVector = Icons.Default.ArrowBack,
-                   tint = Color.LightGray,
-                   contentDescription = null
-               )
+    TopAppBar(
+        title = {
+            Text(
+                text = "Characters Voices",
+                fontSize = 24.sp,
+                color = White,
+                fontWeight = FontWeight.SemiBold
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = {
+                navigator.popBackStack()
+                navigator.navigateUp()
+            }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    tint = Color.LightGray,
+                    contentDescription = null
+                )
 
-           }
-       },
-       backgroundColor = PrimaryDark
-   )
+            }
+        },
+        backgroundColor = PrimaryDark
+    )
 
 }
 
@@ -111,8 +111,8 @@ fun Character(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier.clickable {  }
-   ) {
+        modifier.clickable { }
+    ) {
         Image(
             painter = rememberImagePainter(
                 data = characterData.person.images.jpg.imageUrl,

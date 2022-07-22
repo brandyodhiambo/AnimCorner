@@ -2,6 +2,7 @@ package com.example.animconer.views.screens.home
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.capitalize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.animconer.data.repository.AnimeRepository
@@ -25,14 +26,14 @@ class HomeViewModel @Inject constructor(
     val genresState: State<GenresState> = _genresState
 
     private val _selectedGenres = mutableStateOf("All")
-    val selectedGenres:State<String> = _selectedGenres
-    fun setGenres(value:String){
+    val selectedGenres: State<String> = _selectedGenres
+    fun setGenres(value: String) {
         _selectedGenres.value = value
     }
 
     private val _searchTerm = mutableStateOf("")
-    val searchTerm:State<String> = _searchTerm
-    fun setSearch(value:String){
+    val searchTerm: State<String> = _searchTerm
+    fun setSearch(value: String) {
         _searchTerm.value = value
     }
 
@@ -62,7 +63,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-     fun getAnime(genres:String) {
+    fun getAnime(genres: String = "All", searchString: String = "") {
         viewModelScope.launch {
 /*            _animeSate.value = animeState.value.copy(
                 isLoading = true
@@ -70,19 +71,22 @@ class HomeViewModel @Inject constructor(
             animeRepository.getAnime().collectLatest { result ->
                 when (result) {
                     is Resource.Success -> {
-                      if(genres == "All"){
-                          _animeSate.value = animeState.value.copy(
-                              data = result.value ?: emptyList(),
-                              isLoading = false
-                          )
-                      }
-                        else{
-                          _animeSate.value = animeState.value.copy(
-                              data = result.value.filter { it.genres?.get(0)?.name == genres }
-                                  ?: emptyList(),
-                              isLoading = false
-                          )
-                      }
+                        if (genres == "All") {
+                            _animeSate.value = animeState.value.copy(
+                                data = if (searchString != "") {
+                                    result.value.filter { it.title == searchString.capitalize()}
+                                } else {
+                                    result.value
+                                },
+                                isLoading = false
+                            )
+                        } else {
+                            _animeSate.value = animeState.value.copy(
+                                data = result.value.filter { it.genres?.get(0)?.name == genres }
+                                    ?: emptyList(),
+                                isLoading = false
+                            )
+                        }
                     }
                     is Resource.Error -> {
                         _animeSate.value = animeState.value.copy(
@@ -96,7 +100,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getOneAnime(name:String){
+    fun getOneAnime(name: String) {
         animeRepository.getOneAnime(name)
     }
 }

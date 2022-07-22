@@ -15,6 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +37,7 @@ import com.example.animconer.views.ui.theme.SkyBlue
 import com.example.animconer.R
 import com.example.animconer.data.local.entity.Favorite
 import com.example.animconer.views.screens.destinations.DetailScreenDestination
+import com.example.animconer.views.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -64,7 +66,7 @@ fun FavoritesScreen(
                     text = "Favorites",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = SkyBlue,
+                    color = White,
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 IconButton(onClick = {
@@ -73,7 +75,7 @@ fun FavoritesScreen(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
-                        tint = SkyBlue
+                        tint = White
                     )
                 }
             }
@@ -190,6 +192,16 @@ fun AnimationItems(
                         )
                     )
             )
+            IconButton(onClick = {
+                viewModel.deleteOneFavorite(favorite)
+            }, modifier =  Modifier.align(Alignment.TopEnd)) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    tint = SkyBlue,
+                    modifier = Modifier.size(32.dp),
+                    contentDescription = null
+                )
+            }
             AnimationDetails(
                 favorite = favorite,
                 viewModel = viewModel
@@ -235,16 +247,6 @@ fun AnimationDetails(
                         fontWeight = FontWeight.Light
                     )
                 }
-            }
-
-            IconButton(onClick = {
-                viewModel.deleteOneFavorite(favorite)
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Clear,
-                    tint = Color.White,
-                    contentDescription = null
-                )
             }
 
         }

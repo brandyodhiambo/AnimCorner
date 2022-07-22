@@ -6,7 +6,7 @@ import com.example.animconer.data.converters.Converter
 import com.example.animconer.data.local.database.AnimeDatabase
 import com.example.animconer.data.remote.ApiService
 import com.example.animconer.data.repository.AnimeRepository
-import com.example.animconer.data.repository.CharactersRespository
+import com.example.animconer.data.repository.CharactersRepository
 import com.example.animconer.data.repository.FavoriteRepository
 import com.example.animconer.utils.Constants.BASE_URL
 import com.example.animconer.utils.Constants.DATABASE_NAME
@@ -31,14 +31,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFavoriteRepository( database: AnimeDatabase): FavoriteRepository {
-        return FavoriteRepository( database)
+    fun provideFavoriteRepository(database: AnimeDatabase): FavoriteRepository {
+        return FavoriteRepository(database)
     }
 
     @Provides
     @Singleton
-    fun provideCharactersRepository(apiService: ApiService,database: AnimeDatabase) :CharactersRespository{
-        return CharactersRespository(apiService,database)
+    fun provideCharactersRepository(
+        apiService: ApiService,
+        database: AnimeDatabase
+    ): CharactersRepository {
+        return CharactersRepository(apiService, database)
     }
 
     @Provides

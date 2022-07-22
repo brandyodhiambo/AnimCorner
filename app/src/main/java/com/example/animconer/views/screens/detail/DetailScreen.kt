@@ -101,7 +101,8 @@ fun ImageBanner(
         Image(
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current)
-                    .data(data = animeData.images?.jpg?.imageUrl).apply(block = fun ImageRequest.Builder.() {
+                    .data(data = animeData.images?.jpg?.imageUrl)
+                    .apply(block = fun ImageRequest.Builder.() {
                         placeholder(R.drawable.logo)
                         crossfade(true)
                     }).build()
@@ -124,7 +125,7 @@ fun ImageBanner(
                 )
         )
         BackButton(onClick)
-        AnimationType(animeData,viewModel)
+        AnimationType(animeData, viewModel)
 
     }
 
@@ -204,18 +205,21 @@ fun AnimationType(
             }
             val context = LocalContext.current
             FavoriteButtons(
-                isLiked = animeData.malId?.let { viewModel.isFavorite(it).observeAsState().value } != null,
-                onClick = { isLiked->
-                    if (isLiked){
-                        Toast.makeText(context, "You Have Already liked this", Toast.LENGTH_SHORT).show()
-                    } else{
+                isLiked = animeData.malId?.let {
+                    viewModel.isFavorite(it).observeAsState().value
+                } != null,
+                onClick = { isLiked ->
+                    if (isLiked) {
+                        Toast.makeText(context, "You Have Already liked this", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
                         animeData.malId?.let {
                             Favorite(
                                 malId = it,
-                                title =  animeData.title,
+                                title = animeData.title,
                                 images = animeData.images,
-                                rating = animeData.rating ,
-                                isFavorite = true ,
+                                rating = animeData.rating,
+                                isFavorite = true,
                             )
                         }?.let {
                             viewModel.insertFavorite(
@@ -233,7 +237,7 @@ fun AnimationType(
 
 @Composable
 fun AnimationDescription(
-   animeData: AnimeData
+    animeData: AnimeData
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -376,18 +380,18 @@ fun Trailer(
             backgroundColor = Color.Black
         ) {
             val context = LocalContext.current
-            val youtube_video_id = animeData.trailer?.youtubeId?: "qig4KOK2R2g"
+            val youtube_video_id = animeData.trailer?.youtubeId ?: "qig4KOK2R2g"
             val name = animeData.title
             Image(
                 painter = painterResource(id = R.drawable.ic_youtube),
                 modifier = Modifier
                     .size(30.dp)
                     .clickable {
-                  val intent = Intent(context,YoutubeActivity::class.java)
-                    intent.putExtra("EXTRA_YOUTUBE_VIDEO_ID",youtube_video_id)
-                    intent.putExtra("EXTRA_ANIME_NAME",name)
-                    context.startActivity(intent)
-                },
+                        val intent = Intent(context, YoutubeActivity::class.java)
+                        intent.putExtra("EXTRA_YOUTUBE_VIDEO_ID", youtube_video_id)
+                        intent.putExtra("EXTRA_ANIME_NAME", name)
+                        context.startActivity(intent)
+                    },
                 contentDescription = null
             )
         }

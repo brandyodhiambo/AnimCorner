@@ -13,7 +13,7 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 
-class CharactersRespository(
+class CharactersRepository(
     private val apiService: ApiService,
     private val database: AnimeDatabase
 ) {

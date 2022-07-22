@@ -130,21 +130,23 @@ fun TopSection(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        var text by remember { mutableStateOf("") }
 
         OutlinedTextField(
             value = viewModel.searchTerm.value,
             maxLines = 1,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    tint = SkyBlue,
-                    contentDescription = null
-                )
+            trailingIcon = {
+                           IconButton(onClick = {
+                               viewModel.getAnime(searchString = viewModel.searchTerm.value)
+                           }) {
+                               Icon(
+                                   imageVector = Icons.Default.Search,
+                                   tint = SkyBlue,
+                                   contentDescription = null
+                               )
+                           }
             },
             onValueChange = {
                 viewModel.setSearch(it)
-                viewModel.getOneAnime(it)
                 },
             label = {
                 Text(text = "Search", color = White, textAlign = TextAlign.Start)

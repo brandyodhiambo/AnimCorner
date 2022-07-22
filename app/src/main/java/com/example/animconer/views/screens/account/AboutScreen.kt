@@ -28,35 +28,38 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun AboutScreen(
     navigator: DestinationsNavigator
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 8.dp, end = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        AboutAppBar(navigator)
-        Spacer(modifier = Modifier.height(8.dp))
-        Image(
-            painter = painterResource(id = R.drawable.logo),
+    Box(Modifier.fillMaxSize()) {
+        Column(
             modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth(),
-            contentDescription = null
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            text = "AnimeConer is an application developed with an intention of providing entertainment platform for young individuals and animation lovers.The app provides several animations and more details about each including there trailers.",
-            fontSize = 20.sp,
-            color = White,
-            textAlign = TextAlign.Center
-        )
+                .fillMaxSize()
+                .padding(start = 8.dp, end = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            AboutAppBar(navigator)
+            Spacer(modifier = Modifier.height(8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                modifier = Modifier
+                    .height(100.dp)
+                    .fillMaxWidth(),
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "AnimeConer is an application developed with an intention of providing entertainment platform for young individuals and animation lovers.The app provides several animations and more details about each including there trailers.",
+                fontSize = 16.sp,
+                color = White,
+                textAlign = TextAlign.Left
+            )
+
+        }
         Text(
             text = "v1.0.0",
             fontSize = 18.sp,
             color = SkyBlue,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)
         )
-
     }
 
 }
