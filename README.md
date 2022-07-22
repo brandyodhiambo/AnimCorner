@@ -1,4 +1,4 @@
-<p align="center"><img src="project/the-goals.png" alt="AnimeCorner" height="250px"></p>
+<p align="center"><img src="project/animcorner.png" alt="AnimeCorner" height="250px"></p>
 
 # AnimCorner
 An application that i developed with a aim of learning [Jetpack compose](https://developer.android.com/jetpack/compose?gclid=Cj0KCQjwlemWBhDUARIsAFp1rLVEasIdkuT4ctD9QlZypDNFdoY-yRXDP_QQ8mE75u7P20MBBzuQiW8aAs5AEALw_wcB&gclsrc=aw.ds) and many other jetpack library, The application make use of [jikan Api](https://jikan.moe/) which displays a list of animations,there more details and even trailers of the animations.
@@ -13,16 +13,22 @@ The app is built with the Model-View-ViewModel (MVVM) as its structural design p
 <img src="project/splash.png" width="250"/>
 
 ### Home Screen
-<img src="project/shimmer.png" width="250"/> 
+<img src="project/home.png" width="250"/> 
+
+### Details Screen
+<img src="project/detail.png" width="250"/>
 
 ### Favorite Screen
-<img src="project/goal.png" width="250"/> 
+<img src="project/fav1.png" width="250"/> <img src="project/fav2.png" width="250"/>
 
 ### Character Voices Screen
-<img src="project/goal.png" width="250"/> 
+<img src="project/characters.png" width="250"/> 
 
 ### About Screen
-<img src="project/add_goal.png" width="250"/> <img src="project/marking_goals.png" width="250"/> <img src="project/achieved.png" width="250"/>
+<img src="project/account.png" width="250"/> <img src="project/contact.png" width="250"/> 
+
+### Demo
+<img src="project/animevid.mp4" width="250"/>
 
 
 ## Tech Stack.
