@@ -1,7 +1,7 @@
 <p align="center"><img src="project/the-goals.png" alt="AnimeCorner" height="250px"></p>
 
 # AnimCorner
-An application that i developed with a aim of learning Jetpack compose and many other jetpack library, The application make use of [jikan Api](https://jikan.moe/) which displays a list of animations,there more details and even trailers of the animations.
+An application that i developed with a aim of learning [Jetpack compose](https://developer.android.com/jetpack/compose?gclid=Cj0KCQjwlemWBhDUARIsAFp1rLVEasIdkuT4ctD9QlZypDNFdoY-yRXDP_QQ8mE75u7P20MBBzuQiW8aAs5AEALw_wcB&gclsrc=aw.ds) and many other jetpack library, The application make use of [jikan Api](https://jikan.moe/) which displays a list of animations,there more details and even trailers of the animations.
 
 ## Structural design pattern
 The app is built with the Model-View-ViewModel (MVVM) as its structural design pattern that separates objects into three distinct groups:
