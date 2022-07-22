@@ -28,7 +28,7 @@ The app is built with the Model-View-ViewModel (MVVM) as its structural design p
 <img src="project/account.png" width="250"/> <img src="project/contact.png" width="250"/> 
 
 ### Demo
-<img src="project/animevid.mp4" width="250"/>
+<img src="project/animevid.gif" width="250"/>
 
 
 ## Tech Stack.
