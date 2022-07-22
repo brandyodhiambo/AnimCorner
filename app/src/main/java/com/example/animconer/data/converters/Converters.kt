@@ -7,7 +7,6 @@ import com.example.animconer.model.Images
 import com.example.animconer.model.Producer
 import com.example.animconer.model.Trailer
 import com.example.animconer.model.characters.CharacterData
-import com.example.animconer.model.characters.ImagesPerson
 import com.example.animconer.model.characters.Person
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -29,20 +28,6 @@ class Converter(private val gson: Gson) {
             object : TypeToken<ArrayList<Genre>>() {}.type
         ) ?: emptyList()
     }
-
-    /* @TypeConverter
-     fun fromJpg(images: Images?): String? {
-         return JSONObject().apply {
-             put("imageUrl", images?.jpg)
-             put("large_imageUrl",images?.webp)
-         }.toString()
-     }
-
-     @TypeConverter
-     fun toJpg(s: String?): Images? {
-         val json = JSONObject(s)
-         return Images(json.getString("imageUrl"),json.getString("large_imageUrl"))
-     }*/
 
     @TypeConverter
     fun convertFromImagesToJSONString(images: Images): String {
