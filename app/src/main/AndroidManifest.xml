@@ -14,9 +14,6 @@
         android:theme="@style/Theme.AnimConer"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".views.activities.MainActivity2"
-            android:exported="false" />
-        <activity
             android:theme="@style/Theme.AppCompat"
             android:name=".views.activities.YoutubeActivity"
             android:exported="false" />

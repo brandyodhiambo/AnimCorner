@@ -13,7 +13,7 @@ import com.google.android.youtube.player.YouTubePlayerView
 
 class YoutubeActivity : YouTubeBaseActivity() {
 
-    val api_key = BuildConfig.YOUTUBE_API_KEY
+    private val api_key = BuildConfig.YOUTUBE_API_KEY
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_youtube)
