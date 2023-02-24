@@ -45,37 +45,34 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun HomeScreen(
     navigator: DestinationsNavigator,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
-
     val animeState by viewModel.animeState
     val genresState by viewModel.genresState
 
     Scaffold(
-        backgroundColor = PrimaryDark
-    )
-    { paddingValues ->
+        backgroundColor = PrimaryDark,
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
         ) {
-
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
-                contentPadding = PaddingValues(8.dp)
+                contentPadding = PaddingValues(8.dp),
             ) {
-
                 item(span = { GridItemSpan(3) }) {
                     TopSection(
-                        genresState.data,viewModel
+                        genresState.data,
+                        viewModel,
                     )
                 }
 
                 items(animeState.data) { anim ->
                     AnimeItem(
                         animeData = anim,
-                        navigator = navigator
+                        navigator = navigator,
                     )
                 }
             }
@@ -83,7 +80,7 @@ fun HomeScreen(
             if (animeState.isLoading) {
                 LoadingAnimation(
                     modifier = Modifier.align(Center),
-                    circleSize = 16.dp
+                    circleSize = 16.dp,
 
                 )
             }
@@ -95,7 +92,7 @@ fun HomeScreen(
                         .align(Center)
                         .padding(16.dp),
                     text = "${animeState.error}",
-                    color = Color.Red
+                    color = Color.Red,
                 )
             }
         }
@@ -105,20 +102,19 @@ fun HomeScreen(
 @Composable
 fun TopSection(
     genres: List<String>,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
         modifier = Modifier.fillMaxWidth(),
 
-        ) {
-
+    ) {
         Image(
             painter = painterResource(id = R.drawable.logo),
             modifier = Modifier
                 .size(100.dp)
                 .align(CenterHorizontally),
-            contentDescription = null
+            contentDescription = null,
         )
 
         Text(
@@ -126,28 +122,27 @@ fun TopSection(
             fontSize = 24.sp,
             color = White,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 8.dp)
+            modifier = Modifier.padding(start = 8.dp),
         )
         Spacer(modifier = Modifier.height(8.dp))
-
 
         OutlinedTextField(
             value = viewModel.searchTerm.value,
             maxLines = 1,
             trailingIcon = {
-                           IconButton(onClick = {
-                               viewModel.getAnime(searchString = viewModel.searchTerm.value)
-                           }) {
-                               Icon(
-                                   imageVector = Icons.Default.Search,
-                                   tint = SkyBlue,
-                                   contentDescription = null
-                               )
-                           }
+                IconButton(onClick = {
+                    viewModel.getAnime(searchString = viewModel.searchTerm.value)
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        tint = SkyBlue,
+                        contentDescription = null,
+                    )
+                }
             },
             onValueChange = {
                 viewModel.setSearch(it)
-                },
+            },
             label = {
                 Text(text = "Search", color = White, textAlign = TextAlign.Start)
             },
@@ -155,16 +150,15 @@ fun TopSection(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = SkyBlue,
                 unfocusedBorderColor = White,
-                textColor = Color.White
+                textColor = Color.White,
             ),
             modifier = Modifier
                 .padding(start = 8.dp, end = 6.dp)
                 .fillMaxWidth()
                 .clickable {
-
-                }
+                },
         )
-        Genres(genres,viewModel)
+        Genres(genres, viewModel)
         Spacer(modifier = Modifier.height(2.dp))
     }
 }
@@ -172,35 +166,35 @@ fun TopSection(
 @Composable
 fun Genres(
     genres: List<String>,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
 ) {
     Column(
-        Modifier.fillMaxWidth()
+        Modifier.fillMaxWidth(),
     ) {
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "Genres",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = White,
-                modifier = Modifier.padding(start = 8.dp, top = 6.dp)
+                modifier = Modifier.padding(start = 8.dp, top = 6.dp),
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             items(genres) { genres ->
                 Text(
                     color = Color.White,
                     modifier = Modifier
                         .clip(
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
                         )
                         .clickable {
                             viewModel.setGenres(genres)
@@ -211,12 +205,12 @@ fun Genres(
                                 SecondaryDark
                             } else {
                                 SkyBlue
-                            }
+                            },
                         )
                         .padding(16.dp),
                     text = genres,
                     fontSize = 16.sp,
-                    textAlign = TextAlign.Justify
+                    textAlign = TextAlign.Justify,
                 )
             }
         }
@@ -224,12 +218,11 @@ fun Genres(
     }
 }
 
-
 @Composable
 fun AnimeItem(
     animeData: AnimeData,
     navigator: DestinationsNavigator,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
@@ -238,19 +231,19 @@ fun AnimeItem(
             .width(180.dp)
             .clickable {
                 navigator.navigate(DetailScreenDestination(animeData = animeData))
-            }
+            },
     ) {
         Image(
             painter = rememberImagePainter(
-                data = animeData.images?.jpg?.imageUrl,
+                data = animeData.image,
                 builder = {
                     placeholder(R.drawable.logo)
                     crossfade(true)
-                }
+                },
             ),
             modifier = modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
-            contentDescription = null
+            contentDescription = null,
         )
         Box(
             modifier = Modifier
@@ -259,10 +252,10 @@ fun AnimeItem(
                     Brush.verticalGradient(
                         colorStops = arrayOf(
                             Pair(0.3f, Color.Transparent),
-                            Pair(1.5f, PrimaryDark)
-                        )
-                    )
-                )
+                            Pair(1.5f, PrimaryDark),
+                        ),
+                    ),
+                ),
         )
         Column(
             Modifier.fillMaxSize(),
@@ -275,12 +268,10 @@ fun AnimeItem(
                     fontSize = 16.sp,
                     color = White,
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp),
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
-
 }
-

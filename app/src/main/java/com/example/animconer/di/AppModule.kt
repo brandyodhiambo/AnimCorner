@@ -2,6 +2,8 @@ package com.example.animconer.di
 
 import android.content.Context
 import androidx.room.Room
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.animconer.data.converters.Converter
 import com.example.animconer.data.local.database.AnimeDatabase
 import com.example.animconer.data.remote.ApiService
@@ -16,8 +18,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -39,17 +44,37 @@ object AppModule {
     @Singleton
     fun provideCharactersRepository(
         apiService: ApiService,
-        database: AnimeDatabase
+        database: AnimeDatabase,
     ): CharactersRepository {
         return CharactersRepository(apiService, database)
     }
 
     @Provides
     @Singleton
-    fun provideApiService(): ApiService {
+    fun provideApiService(@ApplicationContext context: Context): ApiService {
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                },
+            )
+            .callTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(
+                ChuckerInterceptor.Builder(context)
+                    .collector(ChuckerCollector(context))
+                    .redactHeaders(emptySet())
+                    .alwaysReadResponseBody(false)
+                    .build(),
+            )
+            .build()
+
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
             .create(ApiService::class.java)
     }
@@ -60,7 +85,7 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             AnimeDatabase::class.java,
-            DATABASE_NAME
+            DATABASE_NAME,
         )
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()

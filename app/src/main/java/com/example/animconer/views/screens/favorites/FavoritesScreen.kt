@@ -2,18 +2,16 @@ package com.example.animconer.views.screens.favorites
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
@@ -32,25 +30,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
-import com.example.animconer.views.ui.theme.PrimaryDark
-import com.example.animconer.views.ui.theme.SkyBlue
 import com.example.animconer.R
 import com.example.animconer.data.local.entity.Favorite
 import com.example.animconer.views.screens.destinations.DetailScreenDestination
+import com.example.animconer.views.ui.theme.PrimaryDark
+import com.example.animconer.views.ui.theme.SkyBlue
 import com.example.animconer.views.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination
 @Composable
 fun FavoritesScreen(
     navigator: DestinationsNavigator,
-    viewModel: FavoriteViewModel = hiltViewModel()
+    viewModel: FavoriteViewModel = hiltViewModel(),
 ) {
-
-
     val openDialog = remember { mutableStateOf(false) }
     val allFavoriteAnime = viewModel.allFavorites.observeAsState(initial = emptyList())
 
@@ -60,14 +55,14 @@ fun FavoritesScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
                     text = "Favorites",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = White,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp),
                 )
                 IconButton(onClick = {
                     openDialog.value = true
@@ -75,24 +70,24 @@ fun FavoritesScreen(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
-                        tint = White
+                        tint = White,
                     )
                 }
             }
-        }
+        },
     ) {
         Box {
             if (allFavoriteAnime.value.isEmpty()) {
                 Column(
                     Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Image(
                         modifier = Modifier
                             .size(250.dp),
                         painter = painterResource(id = R.drawable.ic_empty),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -102,12 +97,11 @@ fun FavoritesScreen(
                     AnimationItems(
                         animItem,
                         navigator,
-                        viewModel
+                        viewModel,
                     )
                 }
             }
         }
-
     }
     if (openDialog.value) {
         AlertDialog(
@@ -126,7 +120,7 @@ fun FavoritesScreen(
                         viewModel.deleteAllFavorites()
                         openDialog.value = false
                     },
-                    colors = ButtonDefaults.buttonColors(SkyBlue)
+                    colors = ButtonDefaults.buttonColors(SkyBlue),
                 ) {
                     Text(text = "Yes", color = Color.White)
                 }
@@ -136,25 +130,23 @@ fun FavoritesScreen(
                     onClick = {
                         openDialog.value = false
                     },
-                    colors = ButtonDefaults.buttonColors(SkyBlue)
+                    colors = ButtonDefaults.buttonColors(SkyBlue),
                 ) {
                     Text(text = "No", color = Color.White)
                 }
             },
             backgroundColor = Color.White,
             contentColor = Color.Black,
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
         )
     }
-
 }
-
 
 @Composable
 fun AnimationItems(
     favorite: Favorite,
     navigator: DestinationsNavigator,
-    viewModel: FavoriteViewModel
+    viewModel: FavoriteViewModel,
 ) {
     Card(
         elevation = 4.dp,
@@ -165,20 +157,20 @@ fun AnimationItems(
             .clickable {
                 val animeData = viewModel.getOneAnime(favorite.malId)
                 navigator.navigate(DetailScreenDestination(animeData))
-            }
+            },
     ) {
         Box {
             Image(
                 painter = rememberImagePainter(
-                    data = favorite.images?.jpg?.imageUrl,
+                    data = favorite.image,
                     builder = {
                         placeholder(R.drawable.logo)
                         crossfade(true)
-                    }
+                    },
                 ),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
-                contentDescription = "Animation"
+                contentDescription = "Animation",
             )
             Box(
                 modifier = Modifier
@@ -187,48 +179,45 @@ fun AnimationItems(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
                                 Pair(0.3f, Transparent),
-                                Pair(1.5f, PrimaryDark)
-                            )
-                        )
-                    )
+                                Pair(1.5f, PrimaryDark),
+                            ),
+                        ),
+                    ),
             )
             IconButton(onClick = {
                 viewModel.deleteOneFavorite(favorite)
-            }, modifier =  Modifier.align(Alignment.TopEnd)) {
+            }, modifier = Modifier.align(Alignment.TopEnd)) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
                     tint = SkyBlue,
                     modifier = Modifier.size(32.dp),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
             AnimationDetails(
                 favorite = favorite,
-                viewModel = viewModel
+                viewModel = viewModel,
             )
-
         }
-
     }
-
 }
 
 @Composable
 fun AnimationDetails(
     favorite: Favorite,
-    viewModel: FavoriteViewModel
+    viewModel: FavoriteViewModel,
 ) {
     Row(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
                 favorite.title?.let {
@@ -236,7 +225,7 @@ fun AnimationDetails(
                         text = it,
                         color = Color.White,
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                 }
                 favorite.rating?.let {
@@ -244,14 +233,10 @@ fun AnimationDetails(
                         text = it,
                         color = Color.White,
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.Light
+                        fontWeight = FontWeight.Light,
                     )
                 }
             }
-
         }
-
     }
-
-
 }

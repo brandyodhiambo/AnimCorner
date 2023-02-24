@@ -152,4 +152,8 @@ dependencies {
 
     //staggered grid
    implementation 'com.github.nesyou01:LazyStaggeredGrid:1.2.0'
+
+    // Chucker
+    debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
 }
