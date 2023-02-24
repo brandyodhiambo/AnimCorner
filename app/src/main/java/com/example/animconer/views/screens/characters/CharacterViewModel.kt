@@ -29,13 +29,13 @@ class CharacterViewModel @Inject constructor(
             charactersRepository.getCharacter(malId).collectLatest { character ->
                 when (character) {
                     is Resource.Success -> {
-                        Timber.d(character.value.toString())
+                        Timber.d(character.toString())
                         _characterState.value = characterStata.value.copy(
-                            characters = character.value.data,
+                            characters = character.data?.data ?: emptyList(),
                             isLoading = false
                         )
                     }
-                    is Resource.Error -> {
+                    is Resource.Failure -> {
                         _characterState.value = characterStata.value.copy(
                             error = character.message,
                             isLoading = false

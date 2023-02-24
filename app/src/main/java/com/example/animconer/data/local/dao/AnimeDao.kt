@@ -12,8 +12,11 @@ interface AnimeDao {
     suspend fun insertAnime(anime: List<AnimeEntity>)
 
     @Query("SELECT *FROM table_anime")
-    fun getAnime(): List<AnimeEntity>?
+    fun getAnime(): List<AnimeEntity>
 
     @Query("SELECT * FROM table_anime WHERE title = :name")
     fun getOneAnime(name:String):LiveData<AnimeEntity?>
+
+    @Query("DELETE FROM table_anime")
+    suspend fun deleteAllAnime()
 }

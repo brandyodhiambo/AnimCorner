@@ -8,7 +8,7 @@ import com.example.animconer.utils.Constants.GENRES_TABLE
 data class GenresEntity(
     @PrimaryKey
     val malId: Int,
-    val name: String,
+    val name: String?,
     val type: String?,
     val url: String?
 )

@@ -33,9 +33,9 @@ class CharactersRepository(
                     }
 
                 } catch (e: HttpException) {
-                    emit(Resource.Error("Unknown error occurred"))
+                    emit(Resource.Failure("Unknown error occurred"))
                 } catch (e: IOException) {
-                    emit(Resource.Error("Couldn't reach the server check your internet connection"))
+                    emit(Resource.Failure("Couldn't reach the server check your internet connection"))
                 }
             }
         }

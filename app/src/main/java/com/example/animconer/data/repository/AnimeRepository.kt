@@ -21,30 +21,26 @@ import java.io.IOException
 
 class AnimeRepository(
     private val apiService: ApiService,
-    private val database: AnimeDatabase
+    private val database: AnimeDatabase,
 ) {
     suspend fun getGenre(): Flow<Resource<List<Genre>>> {
         return flow {
             val genreFromdb = database.genresDao.getGenres()
-            if (!genreFromdb.isNullOrEmpty()) {
-                emit(Resource.Success(genreFromdb.map { it.toGenresData() }))
-            } else {
-                try {
-                    val genreFromApi = apiService.getGenres()
-                    Timber.d("CharacterData : $genreFromApi")
-                    database.genresDao.insertGenres(genreFromApi.data.map { it.toGenresEntity() })
-
-                    val newGenresFromdb = database.genresDao.getGenres()
-                    if (newGenresFromdb != null) {
-                        emit(Resource.Success(newGenresFromdb.map { it.toGenresData() }))
-                    }
-
-                } catch (e: HttpException) {
-                    emit(Resource.Error("Unknown error occurred"))
-                } catch (e: IOException) {
-                    emit(Resource.Error("Couldn't reach the server check your internet connection"))
-                }
+            try {
+                val genreFromApi = apiService.getGenres()
+                Timber.d("CharacterData : $genreFromApi")
+                database.genresDao.deleteAllGenres()
+                database.genresDao.insertGenres(genreFromApi.data.map { it.toGenresEntity() })
+            } catch (e: Exception) {
+                emit(Resource.Failure("Unknown error occurred $e",
+                    data = genreFromdb.map { it.toGenresData() }))
+            } catch (e: HttpException) {
+                emit(Resource.Failure("Unknown error occurred"))
+            } catch (e: IOException) {
+                emit(Resource.Failure("Couldn't reach the server check your internet connection"))
             }
+            val newGenreFromDb = database.genresDao.getGenres()
+            emit(Resource.Success(data = newGenreFromDb.map { it.toGenresData() }))
         }.flowOn(Dispatchers.IO)
 
     }
@@ -52,24 +48,22 @@ class AnimeRepository(
     suspend fun getAnime(): Flow<Resource<List<AnimeData>>> {
         return flow {
             val animeFromDB = database.animeDao.getAnime()
-            if (!animeFromDB.isNullOrEmpty()) {
-                emit(Resource.Success(animeFromDB.map { it.toAnimeData() }))
-            } else {
-                try {
-                    val animeDataFromApi = apiService.getAnime()
-                    Timber.d("Response ${animeDataFromApi.data}")
-                    database.animeDao.insertAnime(animeDataFromApi.data.map { it.toAnimEntity() })
-                    val newAnimeDataFromDB = database.animeDao.getAnime()
-                    if (!newAnimeDataFromDB.isNullOrEmpty()) {
-                        emit(Resource.Success(newAnimeDataFromDB.map { it.toAnimeData() }))
-                    }
-
-                } catch (e: HttpException) {
-                    emit(Resource.Error("Unknown error occurred"))
-                } catch (e: IOException) {
-                    emit(Resource.Error("Couldn't reach the server check your internet connection"))
-                }
+            try {
+                val animeDataFromApi = apiService.getAnime()
+                Timber.d("Response ${animeDataFromApi.data}")
+                database.animeDao.deleteAllAnime()
+                database.animeDao.insertAnime(animeDataFromApi.data.map { it.toAnimEntity() })
+            } catch (e: Exception) {
+                emit(Resource.Failure("Unknown error occurred $e",
+                    data = animeFromDB.map { it.toAnimeData() }))
+            } catch (e: HttpException) {
+                emit(Resource.Failure("Unknown error occurred"))
+            } catch (e: IOException) {
+                emit(Resource.Failure("Couldn't reach the server check your internet connection"))
             }
+
+            val newAnimeDataFromDB = database.animeDao.getAnime()
+            emit(Resource.Success(newAnimeDataFromDB.map { it.toAnimeData() }))
         }.flowOn(Dispatchers.IO)
     }
 

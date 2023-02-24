@@ -10,7 +10,7 @@ data class Genre(
     @SerializedName("mal_id")
     val malId: Int,
     @SerializedName("name")
-    val name: String,
+    val name: String?,
     @SerializedName("type")
     val type: String?,
     @SerializedName("url")

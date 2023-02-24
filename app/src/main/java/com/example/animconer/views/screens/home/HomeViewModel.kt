@@ -50,11 +50,12 @@ class HomeViewModel @Inject constructor(
             animeRepository.getGenre().collectLatest { result ->
                 when (result) {
                     is Resource.Success -> {
+                        val genres = result.data?.map { it.name?.capitalize() ?: ""} ?: emptyList()
                         _genresState.value = genresState.value.copy(
-                            data = listOf("All") + result.value.map { it.name },
+                            data = listOf("All") + genres,
                         )
                     }
-                    is Resource.Error -> {
+                    is Resource.Failure -> {
 
                     }
                     else -> {}
@@ -74,21 +75,21 @@ class HomeViewModel @Inject constructor(
                         if (genres == "All") {
                             _animeSate.value = animeState.value.copy(
                                 data = if (searchString != "") {
-                                    result.value.filter { it.title == searchString.capitalize()}
+                                    result.data?.filter { it.title == searchString.capitalize()} ?: emptyList()
                                 } else {
-                                    result.value
+                                    result.data ?: emptyList()
                                 },
                                 isLoading = false
                             )
                         } else {
                             _animeSate.value = animeState.value.copy(
-                                data = result.value.filter { it.genres?.get(0)?.name == genres }
+                                data = result.data?.filter { it.genres?.get(0)?.name == genres }
                                     ?: emptyList(),
                                 isLoading = false
                             )
                         }
                     }
-                    is Resource.Error -> {
+                    is Resource.Failure -> {
                         _animeSate.value = animeState.value.copy(
                             error = result.message,
                             isLoading = false
