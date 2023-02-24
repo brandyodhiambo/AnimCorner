@@ -1,23 +1,31 @@
 package com.example.animconer.data.mappers
 
 import com.example.animconer.data.local.entity.AnimeEntity
-import com.example.animconer.model.AnimeData
+import com.example.animconer.data.remote.response.AnimeResponse
+import com.example.animconer.data.remote.response.GenresResponse
+import com.example.animconer.model.Genre
 
-fun AnimeData.toAnimEntity():AnimeEntity{
+fun AnimeResponse.Anime.toAnimEntity(): AnimeEntity {
     return AnimeEntity(
         airing = airing,
-        genres = genres,
-        images= images,
+        genres = genres.map { it.toGenre() },
+        image = images.jpg.imageUrl,
         malId = malId,
         members = members,
-        producers = producers,
         rating = rating,
         season = season,
         synopsis = synopsis,
         title = title,
-        trailer = trailer,
+        youtubeVideoId = trailer.youtubeId,
         url = url,
         type = type,
-        year = year
+        year = year,
+    )
+}
+
+fun GenresResponse.Genre.toGenre(): Genre {
+    return Genre(
+        malId = malId,
+        name = name,
     )
 }

@@ -6,7 +6,6 @@ import androidx.compose.ui.text.capitalize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.animconer.data.repository.AnimeRepository
-import com.example.animconer.model.Genre
 import com.example.animconer.utils.Resource
 import com.example.animconer.views.screens.home.states.GenresState
 import com.example.animconer.views.screens.home.states.HomeState
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val animeRepository: AnimeRepository
+    private val animeRepository: AnimeRepository,
 ) : ViewModel() {
     private var _animeSate = mutableStateOf(HomeState())
     val animeState: State<HomeState> = _animeSate
@@ -45,18 +44,19 @@ class HomeViewModel @Inject constructor(
     private fun getGenres() {
         viewModelScope.launch {
             _animeSate.value = animeState.value.copy(
-                isLoading = true
+                isLoading = true,
             )
             animeRepository.getGenre().collectLatest { result ->
                 when (result) {
                     is Resource.Success -> {
-                        val genres = result.data?.map { it.name?.capitalize() ?: ""} ?: emptyList()
+                        val genres = result.data?.map {
+                            it.name
+                        } ?: emptyList()
                         _genresState.value = genresState.value.copy(
                             data = listOf("All") + genres,
                         )
                     }
                     is Resource.Failure -> {
-
                     }
                     else -> {}
                 }
@@ -75,24 +75,25 @@ class HomeViewModel @Inject constructor(
                         if (genres == "All") {
                             _animeSate.value = animeState.value.copy(
                                 data = if (searchString != "") {
-                                    result.data?.filter { it.title == searchString.capitalize()} ?: emptyList()
+                                    result.data?.filter { it.title == searchString.capitalize() }
+                                        ?: emptyList()
                                 } else {
                                     result.data ?: emptyList()
                                 },
-                                isLoading = false
+                                isLoading = false,
                             )
                         } else {
                             _animeSate.value = animeState.value.copy(
                                 data = result.data?.filter { it.genres?.get(0)?.name == genres }
                                     ?: emptyList(),
-                                isLoading = false
+                                isLoading = false,
                             )
                         }
                     }
                     is Resource.Failure -> {
                         _animeSate.value = animeState.value.copy(
                             error = result.message,
-                            isLoading = false
+                            isLoading = false,
                         )
                     }
                     else -> {}

@@ -17,7 +17,7 @@ class Converter(private val gson: Gson) {
     fun toGenreString(parts: List<Genre>): String {
         return gson.toJson(
             parts,
-            object : TypeToken<ArrayList<Genre>>() {}.type
+            object : TypeToken<ArrayList<Genre>>() {}.type,
         ) ?: "[]"
     }
 
@@ -25,7 +25,7 @@ class Converter(private val gson: Gson) {
     fun toGenres(parts: String): List<Genre> {
         return gson.fromJson<ArrayList<Genre>>(
             parts,
-            object : TypeToken<ArrayList<Genre>>() {}.type
+            object : TypeToken<ArrayList<Genre>>() {}.type,
         ) ?: emptyList()
     }
 
@@ -39,12 +39,11 @@ class Converter(private val gson: Gson) {
         return Gson().fromJson(jsonToConvert, Images::class.java)
     }
 
-
     @TypeConverter
     fun fromProducer(producer: List<Producer>): String {
         return gson.toJson(
             producer,
-            object : TypeToken<ArrayList<Producer>>() {}.type
+            object : TypeToken<ArrayList<Producer>>() {}.type,
         ) ?: "[]"
     }
 
@@ -52,16 +51,15 @@ class Converter(private val gson: Gson) {
     fun toProducer(producer: String): List<Producer> {
         return gson.fromJson<ArrayList<Producer>>(
             producer,
-            object : TypeToken<ArrayList<Producer>>() {}.type
+            object : TypeToken<ArrayList<Producer>>() {}.type,
         ) ?: emptyList()
     }
-
 
     @TypeConverter
     fun fromListOfCharacter(characters: List<CharacterData>): String {
         return gson.toJson(
             characters,
-            object : TypeToken<ArrayList<CharacterData>>() {}.type
+            object : TypeToken<ArrayList<CharacterData>>() {}.type,
         ) ?: "[]"
     }
 
@@ -69,7 +67,7 @@ class Converter(private val gson: Gson) {
     fun toListOfCharacter(characters: String): List<CharacterData> {
         return gson.fromJson<ArrayList<CharacterData>>(
             characters,
-            object : TypeToken<ArrayList<CharacterData>>() {}.type
+            object : TypeToken<ArrayList<CharacterData>>() {}.type,
         ) ?: emptyList()
     }
 
@@ -91,5 +89,21 @@ class Converter(private val gson: Gson) {
     @TypeConverter
     fun convertFromJSOnStringToPerson(jsonToConvert: String): Person {
         return Gson().fromJson(jsonToConvert, Person::class.java)
+    }
+
+    @TypeConverter
+    fun fromGenres(json: String): List<String> {
+        return gson.fromJson<ArrayList<String>>(
+            json,
+            object : TypeToken<ArrayList<String>>() {}.type,
+        ) ?: emptyList()
+    }
+
+    @TypeConverter
+    fun toGenres(ingredients: List<String>): String {
+        return gson.toJson(
+            ingredients,
+            object : TypeToken<ArrayList<String>>() {}.type,
+        ) ?: "[]"
     }
 }

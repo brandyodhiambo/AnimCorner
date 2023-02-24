@@ -48,19 +48,17 @@ import com.example.animconer.views.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Destination
 @Composable
 fun DetailScreen(
     navigator: DestinationsNavigator,
     animeData: AnimeData,
-    viewModel: FavoriteViewModel = hiltViewModel()
+    viewModel: FavoriteViewModel = hiltViewModel(),
 ) {
-
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         item {
             ImageBanner(
@@ -68,48 +66,44 @@ fun DetailScreen(
                 onClick = {
                     navigator.navigateUp()
                 },
-                viewModel = viewModel
+                viewModel = viewModel,
             )
-
         }
         item {
             AnimationDescription(animeData)
-
         }
         item {
             Trailer(
                 animeData,
-                navigator
+                navigator,
             )
         }
-
     }
-
 }
 
 @Composable
 fun ImageBanner(
     animeData: AnimeData,
     viewModel: FavoriteViewModel,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp)
+            .height(400.dp),
     ) {
         Image(
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current)
-                    .data(data = animeData.images?.jpg?.imageUrl)
+                    .data(data = animeData.image)
                     .apply(block = fun ImageRequest.Builder.() {
                         placeholder(R.drawable.logo)
                         crossfade(true)
-                    }).build()
+                    }).build(),
             ),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
-            contentDescription = "Animation"
+            contentDescription = "Animation",
         )
 
         Box(
@@ -119,28 +113,25 @@ fun ImageBanner(
                     Brush.verticalGradient(
                         colorStops = arrayOf(
                             Pair(0.3f, Color.Transparent),
-                            Pair(1.5f, PrimaryDark)
-                        )
-                    )
-                )
+                            Pair(1.5f, PrimaryDark),
+                        ),
+                    ),
+                ),
         )
         BackButton(onClick)
         AnimationType(animeData, viewModel)
-
     }
-
 }
-
 
 @Composable
 fun BackButton(
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = Arrangement.Start,
     ) {
         Button(
             onClick = {
@@ -154,8 +145,8 @@ fun BackButton(
                 .height(40.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.White.copy(alpha = 0.3f),
-                contentColor = Color.Gray
-            )
+                contentColor = Color.Gray,
+            ),
         ) {
             IconButton(onClick = {
                 onClick()
@@ -164,30 +155,29 @@ fun BackButton(
                     modifier = Modifier.size(100.dp),
                     painter = painterResource(id = R.drawable.ic_chevron_left),
                     tint = LightGray,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
-
     }
 }
 
 @Composable
 fun AnimationType(
     animeData: AnimeData,
-    viewModel: FavoriteViewModel
+    viewModel: FavoriteViewModel,
 ) {
     Row(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Card(
                 shape = RoundedCornerShape(20.dp),
@@ -199,7 +189,7 @@ fun AnimationType(
                     Text(
                         text = animeData.type,
                         fontSize = 16.sp,
-                        modifier = Modifier.padding(6.dp)
+                        modifier = Modifier.padding(6.dp),
                     )
                 }
             }
@@ -217,33 +207,31 @@ fun AnimationType(
                             Favorite(
                                 malId = it,
                                 title = animeData.title,
-                                images = animeData.images,
+                                image = animeData.image,
                                 rating = animeData.rating,
                                 isFavorite = true,
                             )
                         }?.let {
                             viewModel.insertFavorite(
-                                it
+                                it,
                             )
                         }
                     }
-                }
+                },
             )
         }
-
-
     }
 }
 
 @Composable
 fun AnimationDescription(
-    animeData: AnimeData
+    animeData: AnimeData,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp)
+            .padding(start = 16.dp, end = 16.dp),
     ) {
         animeData.title?.let {
             Text(
@@ -253,10 +241,10 @@ fun AnimationDescription(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = SkyBlue,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
             )
         }
-        Spacer(modifier = Modifier.height(4.dp))
+        /*Spacer(modifier = Modifier.height(4.dp))
         animeData.producers?.get(0)?.let {
             Text(
                 modifier = Modifier
@@ -265,10 +253,10 @@ fun AnimationDescription(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = White,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
 
             )
-        }
+        }*/
         Spacer(modifier = Modifier.height(8.dp))
 
         var expanded by remember { mutableStateOf(false) }
@@ -284,9 +272,8 @@ fun AnimationDescription(
                     color = LightGray,
                     modifier = Modifier.clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    )
-                    {
+                        indication = null,
+                    ) {
                         expanded = false
                     },
                     maxLines = if (expanded) Int.MAX_VALUE else 5,
@@ -304,37 +291,37 @@ fun AnimationDescription(
                     onTextLayout = { seeMoreSizeState.value = it.size },
                     modifier = Modifier
                         .then(
-                            if (seeMoreOffset != null)
+                            if (seeMoreOffset != null) {
                                 Modifier.offset(
                                     x = with(density) { seeMoreOffset.x.toDp() },
                                     y = with(density) { seeMoreOffset.y.toDp() },
                                 )
-                            else Modifier
+                            } else {
+                                Modifier
+                            },
                         )
                         .clickable(
                             interactionSource = MutableInteractionSource(),
-                            indication = null
+                            indication = null,
                         ) {
                             expanded = true
-                            //cutText = null
+                            // cutText = null
                         }
-                        .alpha(if (seeMoreOffset != null) 1f else 0f)
+                        .alpha(if (seeMoreOffset != null) 1f else 0f),
                 )
             }
-
         }
-
     }
 }
 
 @Composable
 fun Trailer(
     animeData: AnimeData,
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier
@@ -342,13 +329,11 @@ fun Trailer(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-
-
             Text(
                 text = "Trailer",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = LightGray
+                color = LightGray,
             )
             Row(
                 modifier = Modifier.clickable {
@@ -361,26 +346,24 @@ fun Trailer(
                     text = "Characters",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = LightGray
+                    color = LightGray,
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.ic_chevron_right),
                     tint = White,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
-
         }
         Card(
             modifier = Modifier
                 .height(250.dp)
                 .width(600.dp)
-
                 .padding(start = 8.dp, end = 8.dp),
-            backgroundColor = Color.Black
+            backgroundColor = Color.Black,
         ) {
             val context = LocalContext.current
-            val youtube_video_id = animeData.trailer?.youtubeId ?: "qig4KOK2R2g"
+            val youtube_video_id = animeData.youtubeVideoId ?: "qig4KOK2R2g"
             val name = animeData.title
             Image(
                 painter = painterResource(id = R.drawable.ic_youtube),
@@ -393,12 +376,9 @@ fun Trailer(
                         intent.putExtra("EXTRA_ANIME_NAME", name)
                         context.startActivity(intent)
                     },
-                contentDescription = null
+                contentDescription = null,
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
-
-
-

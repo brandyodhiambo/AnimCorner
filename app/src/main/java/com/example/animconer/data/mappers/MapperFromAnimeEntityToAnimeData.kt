@@ -7,17 +7,16 @@ fun AnimeEntity.toAnimeData(): AnimeData {
     return AnimeData(
         airing = airing,
         genres = genres,
-        images= images,
+        image = image,
         malId = malId,
         members = members,
-        producers = producers,
         rating = rating,
         season = season,
         synopsis = synopsis,
         title = title,
-        trailer = trailer,
+        youtubeVideoId = youtubeVideoId,
         url = url,
         type = type,
-        year = year
+        year = year,
     )
 }

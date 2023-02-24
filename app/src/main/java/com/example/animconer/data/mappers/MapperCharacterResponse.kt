@@ -5,12 +5,12 @@ import com.example.animconer.data.remote.response.CharactersResponse
 
 fun CharacterEntity.toCharacterResponse():CharactersResponse{
     return CharactersResponse(
-       `data` = `data`
+       `data` = characters
     )
 }
 
 fun CharactersResponse.toCharacterEntity():CharacterEntity{
     return CharacterEntity(
-        `data` = `data`
+        characters = `data`
     )
 }
