@@ -43,9 +43,6 @@ class HomeViewModel @Inject constructor(
 
     private fun getGenres() {
         viewModelScope.launch {
-            _animeSate.value = animeState.value.copy(
-                isLoading = true,
-            )
             animeRepository.getGenre().collectLatest { result ->
                 when (result) {
                     is Resource.Success -> {
@@ -55,10 +52,24 @@ class HomeViewModel @Inject constructor(
                         _genresState.value = genresState.value.copy(
                             data = listOf("All") + genres,
                         )
+                        // update loading on failure
+                        _animeSate.value = animeState.value.copy(
+                            isLoading = false
+                        )
+
                     }
                     is Resource.Failure -> {
+                        // update loading on failure
+                        _animeSate.value = animeState.value.copy(
+                            isLoading = false
+                        )
                     }
-                    else -> {}
+                    is Resource.Loading -> {
+                        // update loading state on
+                        _animeSate.value = animeState.value.copy(
+                            isLoading = true,
+                        )
+                    }
                 }
             }
         }
@@ -66,9 +77,6 @@ class HomeViewModel @Inject constructor(
 
     fun getAnime(genres: String = "All", searchString: String = "") {
         viewModelScope.launch {
-/*            _animeSate.value = animeState.value.copy(
-                isLoading = true
-            )*/
             animeRepository.getAnime().collectLatest { result ->
                 when (result) {
                     is Resource.Success -> {
@@ -96,7 +104,11 @@ class HomeViewModel @Inject constructor(
                             isLoading = false,
                         )
                     }
-                    else -> {}
+                    is Resource.Loading -> {
+                        _animeSate.value = animeState.value.copy(
+                            isLoading = false
+                        )
+                    }
                 }
             }
         }
